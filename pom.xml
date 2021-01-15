@@ -138,7 +138,7 @@
 					<descriptors>
 						<descriptor>src/assembly/all-dependencies.xml</descriptor>
 					</descriptors>
-					<finalName>virtual-schema-dist-${vscjdbc.version}-db2-${version}</finalName>
+					<finalName>virtual-schema-dist-${vscjdbc.version}-athena-${version}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 				<executions>

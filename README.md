@@ -18,13 +18,13 @@ SonarCloud results:
 
 # Overview
 
-The **Athena Virtual Schema** provides an abstraction layer that makes an external [DB2](https://www.ibm.com/db2/) accessible from an Exasol database through regular SQL commands. The contents of the external Athena database are mapped to virtual tables which look like and can be queried as any regular Exasol table.
+The **Athena Virtual Schema** provides an abstraction layer that makes an external [AWS Athena](https://aws.amazon.com/athena/) data source accessible from an Exasol database through regular SQL commands. The contents of the external AWS Athena data source are mapped to virtual tables which look like and can be queried as any regular Exasol table.
 
 If you want to set up a Virtual Schema for a different database system, please head over to the [Virtual Schemas Repository][virtual-schemas].
 
 ## Features
 
-* Access a Athena database in read only mode from an Exasol database, using a Virtual Schema.
+* Access an AWS Athena data source in read only mode from an Exasol database, using a Virtual Schema.
 
 ## Table of Contents
 
@@ -44,12 +44,12 @@ Find all the documentation in the [Virtual Schemas project][vs-doc].
 
 Running the Virtual Schema requires a Java Runtime version 11 or later.
 
-| Dependency                                                         | Purpose                                                | License                           |
-|--------------------------------------------------------------------|--------------------------------------------------------|-----------------------------------|
-| [Exasol Virtual Schema JDBC][virtual-schema-common-jdbc]           | Common JDBC functions for Virtual Schemas adapters     | MIT License                       |
-| [Athena JDBC Driver][athena-jdbc-driver]                           | JDBC driver for Athena database                        | Apache-2.0 License                |
-| [Exasol Error Reporting][exasol-error-reporting]                   | Creating unified error messages                        | MIT License                       |
-| [Exasol Database Fundamentals for Java][exasol-db-funtamentals]    | Base objects and ground rules for the Exasol database  | MIT License                       |
+| Dependency                                                         | Purpose                                                | License                       |
+|--------------------------------------------------------------------|--------------------------------------------------------|-------------------------------|
+| [Exasol Virtual Schema JDBC][virtual-schema-common-jdbc]           | Common JDBC functions for Virtual Schemas adapters     | MIT License                   |
+| [Athena JDBC Driver][athena-jdbc-driver]                           | JDBC driver for Athena database                        | Apache-2.0 License            |
+| [Exasol Error Reporting][exasol-error-reporting]                   | Creating unified error messages                        | MIT License                   |
+| [Exasol Database Fundamentals for Java][exasol-db-funtamentals]    | Base objects and ground rules for the Exasol database  | MIT License                   |
 
 ### Test Dependencies
 

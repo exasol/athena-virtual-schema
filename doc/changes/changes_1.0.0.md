@@ -4,7 +4,7 @@ Code name: Migration from the virtual-schemas repository
 
 ## Features / Enhancements
 
-* 1: Migrated from the virtual-schemas repository 
+* #1: Migrated from the virtual-schemas repository 
 
 ## Runtime Dependencies
 
