@@ -20,10 +20,10 @@ You need to specify the following settings when adding the JDBC driver via EXAOp
 
 | Parameter | Value                                               |
 |-----------|-----------------------------------------------------|
-| Name      | `ATHENA`                                           |
-| Main      | `com.simba.athena.jdbc.Driver`                  |
-| Prefix    | `jdbc:awsathena:`                                 |
-| Files     | `AthenaJDBC42_<JDBC driver version>.jar`       |
+| Name      | `ATHENA`                                            |
+| Main      | `com.simba.athena.jdbc.Driver`                      |
+| Prefix    | `jdbc:awsathena:`                                   |
+| Files     | `AthenaJDBC42_<JDBC driver version>.jar`            |
 
 Please refer to the [documentation on configuring JDBC connections to Athena](https://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html) for details.
 
