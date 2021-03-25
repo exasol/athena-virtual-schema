@@ -52,7 +52,7 @@ The SQL statement below creates the adapter script, defines the Java class that 
 ```sql
 CREATE OR REPLACE JAVA ADAPTER SCRIPT ADAPTER.JDBC_ADAPTER AS
     %scriptclass com.exasol.adapter.RequestDispatcher;
-    %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-8.0.0-athena-1.0.0.jar;
+    %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-9.0.2-athena-2.0.0.jar;
     %jar /buckets/<BFS service>/<bucket>/AthenaJDBC42-<JDBC driver version>.jar;
 /
 ;
@@ -81,3 +81,36 @@ CREATE VIRTUAL SCHEMA <virtual schema name>
     CONNECTION_NAME = 'ATHENA_CONNECTION'
     SCHEMA_NAME = '<database name>';
 ```
+
+## Data Types Conversion
+
+BigQuery Data Type | Supported | Converted Exasol Data Type| Known limitations
+-------------------|-----------|---------------------------|-------------------
+ARRAY              |  ×        |                           |
+BOOLEAN            |  ✓        | BOOLEAN                   |
+BIGINT             |  ✓        | DECIMAL                   |
+BINARY             |  ×        |                           |
+CHAR               |  ✓        | CHAR                      |
+DATE               |  ✓        | DATE                      |
+DECIMAL            |  ✓        | DECIMAL                   |
+DOUBLE             |  ✓        | DOUBLE                    |
+FLOAT              |  ✓        | DOUBLE                    |
+INTEGER            |  ✓        | DECIMAL(19,0)             |
+MAP                |  ×        |                           |
+SMALLINT           |  ✓        | DECIMAL                   |
+STRING*            |  ✓        | VARCHAR                   |
+STRUCT             |  ×        |                           |
+TIMESTAMP          |  ✓        | TIMESTAMP                 |
+TINYINT            |  ✓        | DECIMAL                   |
+VARCHAR            |  ✓        | VARCHAR                   |
+
+* Please be aware that the recommended Simba JDBC driver returns 255 as a default length of the String data type. It means that if you have a longer String value, the Exasol database would throw an Exception. To avoid this, you can specify a String length in the connection string:
+
+```
+CREATE OR REPLACE CONNECTION ATHENA_CONNECTION
+TO 'jdbc:awsathena://AwsRegion=<region>;S3OutputLocation=s3://<path to query results>;StringColumnLength=2000000'
+USER '<access key ID>'
+IDENTIFIED BY '<access key>';
+```
+
+In this example we used the maximum length of the Exasol Varchar datatype.
