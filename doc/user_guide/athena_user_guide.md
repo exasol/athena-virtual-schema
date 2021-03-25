@@ -30,7 +30,7 @@ Please refer to the [documentation on configuring JDBC connections to Athena](ht
 IMPORTANT: The latest Athena driver requires to **Disable Security Manager**.
 It is necessary because JDBC driver requires Java permissions which we do not grant by default.
 
-## Uploading the JDBC Driver to EXAOperation
+## Uploading the JDBC Driver to BucketFS
 
 1. [Create a bucket in BucketFS](https://docs.exasol.com/administration/on-premise/bucketfs/create_new_bucket_in_bucketfs_service.htm)
 1. Upload the driver to BucketFS
@@ -84,25 +84,25 @@ CREATE VIRTUAL SCHEMA <virtual schema name>
 
 ## Data Types Conversion
 
-BigQuery Data Type | Supported | Converted Exasol Data Type| Known limitations
--------------------|-----------|---------------------------|-------------------
-ARRAY              |  ×        |                           |
-BOOLEAN            |  ✓        | BOOLEAN                   |
-BIGINT             |  ✓        | DECIMAL                   |
-BINARY             |  ×        |                           |
-CHAR               |  ✓        | CHAR                      |
-DATE               |  ✓        | DATE                      |
-DECIMAL            |  ✓        | DECIMAL                   |
-DOUBLE             |  ✓        | DOUBLE                    |
-FLOAT              |  ✓        | DOUBLE                    |
-INTEGER            |  ✓        | DECIMAL(19,0)             |
-MAP                |  ×        |                           |
-SMALLINT           |  ✓        | DECIMAL                   |
-STRING*            |  ✓        | VARCHAR                   |
-STRUCT             |  ×        |                           |
-TIMESTAMP          |  ✓        | TIMESTAMP                 |
-TINYINT            |  ✓        | DECIMAL                   |
-VARCHAR            |  ✓        | VARCHAR                   |
+| Athena Data Type   | Supported | Converted Exasol Data Type| Known limitations
+|--------------------|-----------|---------------------------|-------------------
+| ARRAY              |  ×        |                           |
+| BOOLEAN            |  ✓        | BOOLEAN                   |
+| BIGINT             |  ✓        | DECIMAL                   |
+| BINARY             |  ×        |                           |
+| CHAR               |  ✓        | CHAR                      |
+| DATE               |  ✓        | DATE                      |
+| DECIMAL            |  ✓        | DECIMAL                   |
+| DOUBLE             |  ✓        | DOUBLE                    |
+| FLOAT              |  ✓        | DOUBLE                    |
+| INTEGER            |  ✓        | DECIMAL(19,0)             |
+| MAP                |  ×        |                           |
+| SMALLINT           |  ✓        | DECIMAL                   |
+| STRING*            |  ✓        | VARCHAR                   |
+| STRUCT             |  ×        |                           |
+| TIMESTAMP          |  ✓        | TIMESTAMP                 |
+| TINYINT            |  ✓        | DECIMAL                   |
+| VARCHAR            |  ✓        | VARCHAR                   |
 
 * Please be aware that the recommended Simba JDBC driver returns 255 as a default length of the String data type. It means that if you have a longer String value, the Exasol database would throw an Exception. To avoid this, you can specify a String length in the connection string:
 
