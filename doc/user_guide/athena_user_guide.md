@@ -9,26 +9,24 @@ First download the [Athena JDBC driver](https://docs.aws.amazon.com/athena/lates
 Now register the driver in EXAOperation:
 
 1. Click "Software"
-1. Switch to tab "JDBC Drivers"
-1. Click "Browse..."
-1. Select JDBC driver file
-1. Click "Upload"
+1. Switch to the tab "JDBC Drivers"
 1. Click "Add"
-1. In dialog "Add EXACluster JDBC driver" configure the JDBC driver (see below)
+1. In dialog "Add EXACluster JDBC driver" configure the JDBC driver (see table below)
 
-You need to specify the following settings when adding the JDBC driver via EXAOperation.
+   | Parameter                | Value                          |
+   |--------------------------|--------------------------------|
+   | Driver Name              | `ATHENA`                       |
+   | Main Class               | `com.simba.athena.jdbc.Driver` |
+   | Prefix                   | `jdbc:awsathena:`              |
+   | Disable Security Manager | true                           |
 
-| Parameter | Value                                               |
-|-----------|-----------------------------------------------------|
-| Name      | `ATHENA`                                            |
-| Main      | `com.simba.athena.jdbc.Driver`                      |
-| Prefix    | `jdbc:awsathena:`                                   |
-| Files     | `AthenaJDBC42_<JDBC driver version>.jar`            |
+1. Click "Add"
+1. Select a round radio button of the created driver
+1. Click "Browse..."
+1. Select JDBC driver file (`AthenaJDBC42.jar`)
+1. Click "Upload"
 
-Please refer to the [documentation on configuring JDBC connections to Athena](https://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html) for details.
-
-IMPORTANT: The latest Athena driver requires to **Disable Security Manager**.
-It is necessary because JDBC driver requires Java permissions which we do not grant by default.
+IMPORTANT: The latest Athena driver requires to **Disable Security Manager** because JDBC driver requires Java permissions which we do not grant by default.
 
 ## Uploading the JDBC Driver to BucketFS
 
@@ -53,14 +51,14 @@ The SQL statement below creates the adapter script, defines the Java class that 
 CREATE OR REPLACE JAVA ADAPTER SCRIPT ADAPTER.JDBC_ADAPTER AS
     %scriptclass com.exasol.adapter.RequestDispatcher;
     %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-9.0.2-athena-2.0.0.jar;
-    %jar /buckets/<BFS service>/<bucket>/AthenaJDBC42-<JDBC driver version>.jar;
+    %jar /buckets/<BFS service>/<bucket>/AthenaJDBC42.jar;
 /
 ;
 ```
 
 ## Defining a Named Connection
 
-Define the connection to Athena as shown below. We recommend using TLS to secure the connection.
+Define the connection to Athena as shown below. We also recommend using TLS to secure the connection.
 
 ```sql
 CREATE OR REPLACE CONNECTION ATHENA_CONNECTION
@@ -68,6 +66,10 @@ TO 'jdbc:awsathena://AwsRegion=<region>;S3OutputLocation=s3://<path to query res
 USER '<access key ID>'
 IDENTIFIED BY '<access key>';
 ```
+
+Please refer to the [documentation on configuring JDBC connections to Athena](https://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html) for details.
+
+For the connection troubleshooting refer to the [AWS documentation](https://aws.amazon.com/premiumsupport/knowledge-center/). Search for Amazon Athena on the page.
 
 ## Creating a Virtual Schema
 
