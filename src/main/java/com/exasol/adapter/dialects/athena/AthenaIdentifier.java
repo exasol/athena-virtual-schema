@@ -48,7 +48,7 @@ public class AthenaIdentifier implements Identifier {
             return new AthenaIdentifier(id);
         } else {
             throw new AssertionError(ExaError.messageBuilder("E-VS-ATHENA-1")
-                    .message(" Unable to create identifier {{id}} because it contains illegal characters." //
+                    .message("Unable to create identifier {{id}} because it contains illegal characters." //
                             + " For information about valid identifiers, please refer to" //
                             + " https://docs.aws.amazon.com/athena/latest/ug/tables-databases-columns-names.html", id)
                     .toString());
