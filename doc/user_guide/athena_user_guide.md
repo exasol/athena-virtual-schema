@@ -143,7 +143,7 @@ If you created a Virtual Schema successfully, but a SELECT query runs forever wi
    ...
    ```
    
-   In this case, you need to enable outbound traffic on the port (it can be your firewall).
+   In this case, you need to enable outbound traffic on the port (usually, it is blocked by your firewall).
 
 * Enable Athena JDBC driver logs and check them: maybe there is a missing permission. To enable the logs, you need to modify a connection string. Append this line to the connection string, recreate a connection and run a query again:
 
