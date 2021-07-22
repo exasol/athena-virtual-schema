@@ -1,0 +1,5 @@
+error-tags:
+  VS-ATHENA:
+    packages:
+      - com.exasol.adapter.dialects.athena
+    highest-index: 2

@@ -3,6 +3,7 @@ package com.exasol.adapter.dialects.athena;
 import java.util.Objects;
 
 import com.exasol.db.Identifier;
+import com.exasol.errorreporting.ExaError;
 
 /**
  * Represents an identifier in the Athena database.
@@ -46,10 +47,11 @@ public class AthenaIdentifier implements Identifier {
         if (validate(id)) {
             return new AthenaIdentifier(id);
         } else {
-            throw new AssertionError("E-ID-2: Unable to create identifier \"" + id //
-                    + "\" because it contains illegal characters." //
-                    + " For information about valid identifiers, please refer to" //
-                    + " https://docs.aws.amazon.com/athena/latest/ug/tables-databases-columns-names.html");
+            throw new AssertionError(ExaError.messageBuilder("E-VS-ATHENA-1")
+                    .message("Unable to create identifier {{id}} because it contains illegal characters." //
+                            + " For information about valid identifiers, please refer to" //
+                            + " https://docs.aws.amazon.com/athena/latest/ug/tables-databases-columns-names.html", id)
+                    .toString());
         }
     }
 
