@@ -13,10 +13,14 @@ import java.util.Set;
 
 import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.capabilities.Capabilities;
-import com.exasol.adapter.dialects.*;
+import com.exasol.adapter.dialects.AbstractSqlDialect;
+import com.exasol.adapter.dialects.QueryRewriter;
 import com.exasol.adapter.dialects.rewriting.ImportIntoTemporaryTableQueryRewriter;
 import com.exasol.adapter.dialects.rewriting.SqlGenerationContext;
-import com.exasol.adapter.jdbc.*;
+import com.exasol.adapter.jdbc.ConnectionFactory;
+import com.exasol.adapter.jdbc.RemoteMetadataReader;
+import com.exasol.adapter.jdbc.RemoteMetadataReaderException;
+import com.exasol.errorreporting.ExaError;
 
 /**
  * This class implements the SQL dialect of Amazon's AWS Athena.
@@ -130,8 +134,10 @@ public class AthenaSqlDialect extends AbstractSqlDialect {
         try {
             return new AthenaMetadataReader(this.connectionFactory.getConnection(), this.properties);
         } catch (final SQLException exception) {
-            throw new RemoteMetadataReaderException(
-                    "Unable to create Athena remote metadata reader. Caused by: " + exception.getMessage(), exception);
+            throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VS-ATHENA-2")
+                    .message("Unable to create Athena remote metadata reader. Caused by: {{message}}",
+                            exception.getMessage())
+                    .toString(), exception);
         }
     }
 
