@@ -11,7 +11,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 class AthenaIdentifierTest {
     @ParameterizedTest
-    @ValueSource(strings = { "_myunderscoretable", "123columnone", "テスト", "таблица" })
+    @ValueSource(strings = { "_myunderscoretable", "123columnone", "テスト", "таблица", "test-eu-west-1" })
     void testCreateValidIdentifier(final String identifier) {
         assertDoesNotThrow(() -> AthenaIdentifier.of(identifier));
     }

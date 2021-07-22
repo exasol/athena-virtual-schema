@@ -10,6 +10,7 @@ The `SQL_DIALECT` property used when executing a `CREATE VIRTUAL SCHEMA` from th
 
 * #4: Described String data type.
 * #8: Improved user guide, replaced outdated information.
+* #11: Added a troubleshooting guide.
 
 ## Dependency Updates
 

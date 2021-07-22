@@ -116,3 +116,41 @@ IDENTIFIED BY '<access key>';
 ```
 
 In this example we used the maximum length of the Exasol Varchar datatype.
+
+## Troubleshooting 
+
+## SELECT Query Hangs and Returns Timeout
+
+If you created a Virtual Schema successfully, but a SELECT query runs forever without any result, check the following things:
+
+* Verify that you disabled a security manager in the JDBC driver installed in EXAoperation.
+* Verify that Exasol can receive outgoing connections from AWS on port 443 and 444. For that, ssh into Exasol node and run netcat commands:
+
+   ```shell
+   nc -v athena.eu-west-1.amazonaws.com 443
+   nc -v athena.eu-west-1.amazonaws.com 444
+   ```
+   
+   `athena.eu-west-1.amazonaws.com` is a public endpoint. If you use a private VPC endpoint with Athena, please specify it instead of public one. If a port is not opened, you will see output like this:
+   
+   ```shell
+   [root@n0011 ~]# nc -v athena.eu-west-1.amazonaws.com 444
+   Ncat: Version 7.50 ( https://nmap.org/ncat )
+   Ncat: Connection to 52.49.83.92 failed: Connection timed out.
+   Ncat: Trying next address...
+   Ncat: Connection to 52.209.65.135 failed: Connection timed out.
+   Ncat: Trying next address...
+   ...
+   ```
+   
+   In this case, you need to enable outbound traffic on the port (it can be your firewall).
+
+* Enable Athena JDBC driver logs and check them: maybe there is a missing permission. To enable the logs, you need to modify a connection string. Append this line to the connection string, recreate a connection and run a query again:
+
+   ```
+   LogLevel=5;LogPath=/tmp/athena/
+   ```
+   
+   You can find the logs in the `/tmp/athena/` directory on the Exasol Node.
+
+* See also: https://aws.amazon.com/premiumsupport/knowledge-center/athena-connection-timeout-jdbc-odbc-driver/
