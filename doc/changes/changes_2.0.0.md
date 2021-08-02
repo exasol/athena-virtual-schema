@@ -1,4 +1,4 @@
-# Virtual Schema for Athena 2.0.0, released 2021-??-??
+# Virtual Schema for Athena 2.0.0, released 2021-08-02
 
 Code name: Removed `SQL_DIALECT` property
 
@@ -9,6 +9,8 @@ The `SQL_DIALECT` property used when executing a `CREATE VIRTUAL SCHEMA` from th
 ## Documentation
 
 * #4: Described String data type.
+* #6: Added troubleshooting information about working groups.
+* #7: Added troubleshooting information about allowed schema names in Athena.
 * #8: Improved user guide, replaced outdated information.
 * #11: Added a troubleshooting guide.
 
