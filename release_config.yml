@@ -1,0 +1,14 @@
+community-tags:
+  - Virtual Schema
+  - Open Source
+  - GitHub
+  - AWS
+  - Athena
+community-project-name: Athena Virtual Schema
+community-project-description: |
+  The **Athena Virtual Schema** provides an abstraction layer that makes an external [AWS Athena](https://aws.amazon.com/athena/) data source accessible from an Exasol database through regular SQL commands.
+  The contents of the external AWS Athena data source are mapped to virtual tables which look like and can be queried as any regular Exasol table.
+release-platforms:
+  - GitHub
+  - Community
+  - Jira
