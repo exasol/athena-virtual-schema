@@ -119,7 +119,7 @@ In this example we used the maximum length of the Exasol Varchar datatype.
 
 ## Troubleshooting 
 
-## SELECT Query Hangs and Returns Timeout
+### SELECT Query Hangs and Returns Timeout
 
 If you created a Virtual Schema successfully, but a SELECT query runs forever without any result, check the following things:
 
@@ -154,3 +154,13 @@ If you created a Virtual Schema successfully, but a SELECT query runs forever wi
    You can find the logs in the `/tmp/athena/` directory on the Exasol Node.
 
 * See also: https://aws.amazon.com/premiumsupport/knowledge-center/athena-connection-timeout-jdbc-odbc-driver/
+
+### You get an error: Value null at 'workGroup' failed to satisfy constraint: Member must not be null
+
+**Solution**: use the JDBC driver 2.0.23 or later. Some old driver versions had a bug leading to this error.
+See the driver's [changelog](https://s3.cn-north-1.amazonaws.com.cn/athena-downloads-cn/drivers/JDBC/SimbaAthenaJDBC-2.0.23.1000/docs/release-notes.txt) file for additional information.
+
+### If Athena database/table/column name has special characters except underscore, Virtual Schema throws an error
+
+**Solution**: This is an expected behavior. We validate on the Virtual Schema side that Athena identifiers only contain supported characters following this rule: `Special characters other than underscore (_) are not supported.`
+See [the official AWS documentation](https://docs.aws.amazon.com/athena/latest/ug/tables-databases-columns-names.html) for more information.
