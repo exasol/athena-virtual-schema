@@ -4,7 +4,7 @@ Code name:
 
 ## Documentation
 
-* #17: Fixed user guide.
+* #17: Fixed instructions for creating a virtual schema in the user guide.
 
 ## Dependency Updates
 
