@@ -50,7 +50,7 @@ The SQL statement below creates the adapter script, defines the Java class that 
 ```sql
 CREATE OR REPLACE JAVA ADAPTER SCRIPT ADAPTER.JDBC_ADAPTER AS
     %scriptclass com.exasol.adapter.RequestDispatcher;
-    %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-9.0.3-athena-2.0.0.jar;
+    %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-9.0.3-athena-2.0.1.jar;
     %jar /buckets/<BFS service>/<bucket>/AthenaJDBC42.jar;
 /
 ;
@@ -79,7 +79,6 @@ Below you see how an Athena Virtual Schema is created. Please note that you have
 CREATE VIRTUAL SCHEMA <virtual schema name>
     USING ADAPTER.JDBC_ADAPTER
     WITH
-    SQL_DIALECT = 'ATHENA'
     CONNECTION_NAME = 'ATHENA_CONNECTION'
     SCHEMA_NAME = '<database name>';
 ```
