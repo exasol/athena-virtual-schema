@@ -134,7 +134,7 @@ public class AthenaSqlDialect extends AbstractSqlDialect {
         try {
             return new AthenaMetadataReader(this.connectionFactory.getConnection(), this.properties);
         } catch (final SQLException exception) {
-            throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VS-ATHENA-2")
+            throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VSATHENA-2")
                     .message("Unable to create Athena remote metadata reader. Caused by: {{message}}",
                             exception.getMessage())
                     .toString(), exception);
