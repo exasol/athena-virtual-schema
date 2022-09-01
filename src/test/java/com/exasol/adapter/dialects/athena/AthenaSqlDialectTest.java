@@ -10,6 +10,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
@@ -28,6 +29,7 @@ import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.dialects.SqlDialect.NullSorting;
 import com.exasol.adapter.dialects.SqlDialect.StructureElementSupport;
 import com.exasol.adapter.jdbc.ConnectionFactory;
+import com.exasol.adapter.jdbc.RemoteMetadataReaderException;
 
 @ExtendWith(MockitoExtension.class)
 class AthenaSqlDialectTest {
@@ -136,10 +138,19 @@ class AthenaSqlDialectTest {
     }
 
     @Test
+    void testCreateMetadataReaderFails(@Mock final Connection connectionMock) throws SQLException {
+        when(this.connectionFactoryMock.getConnection()).thenThrow(new SQLException("mock"));
+        final RemoteMetadataReaderException exception = assertThrows(RemoteMetadataReaderException.class,
+                dialect::createRemoteMetadataReader);
+        assertThat(exception.getMessage(),
+                equalTo("E-VSATHENA-2: Unable to create Athena remote metadata reader. Caused by: 'mock'"));
+    }
+
+    @Test
     void testGetSupportedProperties() {
         assertThat(this.dialect.getSupportedProperties(),
-                containsInAnyOrder(CONNECTION_NAME_PROPERTY, CATALOG_NAME_PROPERTY,
-                        SCHEMA_NAME_PROPERTY, TABLE_FILTER_PROPERTY, EXCLUDED_CAPABILITIES_PROPERTY,
-                        DEBUG_ADDRESS_PROPERTY, LOG_LEVEL_PROPERTY));
+                containsInAnyOrder(CONNECTION_NAME_PROPERTY, CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY,
+                        TABLE_FILTER_PROPERTY, EXCLUDED_CAPABILITIES_PROPERTY, DEBUG_ADDRESS_PROPERTY,
+                        LOG_LEVEL_PROPERTY));
     }
 }
