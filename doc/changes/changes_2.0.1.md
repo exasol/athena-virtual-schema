@@ -1,6 +1,12 @@
 # Virtual Schema for Athena 2.0.1, released 2021-??-??
 
-Code name:
+Code name: Enhanced Data Type Detection for Result Sets Latest
+
+## Summary
+
+Starting with version 7.1.14 Exasol database uses the capabilities reported by each virtual schema to provide select list data types for each push down request. Based on this information the JDBC virtual schemas no longer need to infer the data types of the result set by inspecting its values. Instead the JDBC virtual schemas can now use the information provided by the database.
+
+This release provides enhanced data type detection for result sets by updating virtual-schema-common-jdbc to version [10.1.0](https://github.com/exasol/virtual-schema-common-jdbc/releases/tag/10.1.0). If this new detection mechanism causes issues (e.g. with encoding of `CHAR` and `VARCHAR` types) you can disable it by setting `IMPORT_DATA_TYPES` to value `FROM_RESULT_SET` when creating the virtual schema. See the documentation of [JDBC adapter properties](https://github.com/exasol/virtual-schema-common-jdbc/blob/main/README.md#adapter-properties-for-jdbc-based-virtual-schemas) for details.
 
 ## Documentation
 
