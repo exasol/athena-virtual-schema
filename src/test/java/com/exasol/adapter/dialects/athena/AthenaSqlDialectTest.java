@@ -26,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.exasol.adapter.AdapterProperties;
+import com.exasol.adapter.dialects.DataTypeDetection;
 import com.exasol.adapter.dialects.SqlDialect.NullSorting;
 import com.exasol.adapter.dialects.SqlDialect.StructureElementSupport;
 import com.exasol.adapter.jdbc.ConnectionFactory;
@@ -141,7 +142,7 @@ class AthenaSqlDialectTest {
     void testCreateMetadataReaderFails(@Mock final Connection connectionMock) throws SQLException {
         when(this.connectionFactoryMock.getConnection()).thenThrow(new SQLException("mock"));
         final RemoteMetadataReaderException exception = assertThrows(RemoteMetadataReaderException.class,
-                dialect::createRemoteMetadataReader);
+                this.dialect::createRemoteMetadataReader);
         assertThat(exception.getMessage(),
                 equalTo("E-VSATHENA-2: Unable to create Athena remote metadata reader. Caused by: 'mock'"));
     }
@@ -151,6 +152,6 @@ class AthenaSqlDialectTest {
         assertThat(this.dialect.getSupportedProperties(),
                 containsInAnyOrder(CONNECTION_NAME_PROPERTY, CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY,
                         TABLE_FILTER_PROPERTY, EXCLUDED_CAPABILITIES_PROPERTY, DEBUG_ADDRESS_PROPERTY,
-                        LOG_LEVEL_PROPERTY));
+                        LOG_LEVEL_PROPERTY, DataTypeDetection.STRATEGY_PROPERTY));
     }
 }
