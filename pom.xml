@@ -8,7 +8,7 @@
     <description>Virtual Schema for connecting Athena as a data source to Exasol</description>
     <url>https://github.com/exasol/athena-virtual-schema/</url>
     <properties>
-        <vscjdbc.version>9.0.5</vscjdbc.version>
+        <vscjdbc.version>10.1.0</vscjdbc.version>
     </properties>
     <repositories>
         <repository>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>error-reporting-java</artifactId>
-            <version>0.4.1</version>
+            <version>1.0.1</version>
         </dependency>
         <!--Unit test dependencies -->
         <dependency>
@@ -59,19 +59,19 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.9.0</version>
+            <version>5.9.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>4.7.0</version>
+            <version>5.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
-            <version>3.10.1</version>
+            <version>3.13.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -87,7 +87,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>2.6.2</version>
+                <version>2.9.3</version>
                 <executions>
                     <execution>
                         <goals>
