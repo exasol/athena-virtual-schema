@@ -17,9 +17,7 @@ import com.exasol.adapter.dialects.AbstractSqlDialect;
 import com.exasol.adapter.dialects.QueryRewriter;
 import com.exasol.adapter.dialects.rewriting.ImportIntoTemporaryTableQueryRewriter;
 import com.exasol.adapter.dialects.rewriting.SqlGenerationContext;
-import com.exasol.adapter.jdbc.ConnectionFactory;
-import com.exasol.adapter.jdbc.RemoteMetadataReader;
-import com.exasol.adapter.jdbc.RemoteMetadataReaderException;
+import com.exasol.adapter.jdbc.*;
 import com.exasol.errorreporting.ExaError;
 
 /**
