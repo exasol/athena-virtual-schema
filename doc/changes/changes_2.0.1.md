@@ -15,6 +15,7 @@ This release provides enhanced data type detection for result sets by updating v
 ## Bugfixes
 
 * #19: Fixed broken links checker
+* #23: Fixed quoting for column names
 
 ## Dependency Updates
 

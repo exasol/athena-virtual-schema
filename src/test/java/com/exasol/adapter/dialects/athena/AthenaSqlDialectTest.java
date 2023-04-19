@@ -112,7 +112,7 @@ class AthenaSqlDialectTest {
 
     @CsvSource({ "tableName, \"tableName\"", //
             "table123, \"table123\"", //
-            "_table, `_table`", //
+            "_table, \"_table\"", //
             "123table, \"123table\"", //
             "table_name, \"table_name\"" })
     @ParameterizedTest
