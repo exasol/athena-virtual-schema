@@ -1,4 +1,4 @@
-# Virtual Schema for Athena 2.0.1, released 2021-??-??
+# Virtual Schema for Athena 2.0.1, released 2021-04-24
 
 Code name: Enhanced Data Type Detection for Result Sets Latest
 
