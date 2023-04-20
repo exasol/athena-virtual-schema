@@ -26,7 +26,10 @@ public class AthenaIdentifier implements Identifier {
     }
 
     /**
+     * Quote a given identifier with backticks ({@code `}).
+     * <p>
      * Only required for {@code CREATE TABLE} statements.
+     * </p>
      *
      * @param identifier
      * @return quoted identifier
