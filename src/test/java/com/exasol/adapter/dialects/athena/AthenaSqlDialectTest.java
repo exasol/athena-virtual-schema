@@ -26,11 +26,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.exasol.adapter.AdapterProperties;
-import com.exasol.adapter.dialects.DataTypeDetection;
 import com.exasol.adapter.dialects.SqlDialect.NullSorting;
 import com.exasol.adapter.dialects.SqlDialect.StructureElementSupport;
 import com.exasol.adapter.jdbc.ConnectionFactory;
 import com.exasol.adapter.jdbc.RemoteMetadataReaderException;
+import com.exasol.adapter.properties.DataTypeDetection;
+import com.exasol.adapter.properties.TableCountLimit;
 
 @ExtendWith(MockitoExtension.class)
 class AthenaSqlDialectTest {
@@ -112,7 +113,7 @@ class AthenaSqlDialectTest {
 
     @CsvSource({ "tableName, \"tableName\"", //
             "table123, \"table123\"", //
-            "_table, `_table`", //
+            "_table, \"_table\"", //
             "123table, \"123table\"", //
             "table_name, \"table_name\"" })
     @ParameterizedTest
@@ -152,6 +153,6 @@ class AthenaSqlDialectTest {
         assertThat(this.dialect.getSupportedProperties(),
                 containsInAnyOrder(CONNECTION_NAME_PROPERTY, CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY,
                         TABLE_FILTER_PROPERTY, EXCLUDED_CAPABILITIES_PROPERTY, DEBUG_ADDRESS_PROPERTY,
-                        LOG_LEVEL_PROPERTY, DataTypeDetection.STRATEGY_PROPERTY));
+                        LOG_LEVEL_PROPERTY, DataTypeDetection.STRATEGY_PROPERTY, TableCountLimit.MAXTABLES_PROPERTY));
     }
 }

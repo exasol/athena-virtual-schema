@@ -22,14 +22,19 @@ public class AthenaIdentifier implements Identifier {
      */
     @Override
     public String quote() {
-        if (this.id.startsWith("_")) {
-            return quoteWithBackticks(this.id);
-        } else {
-            return quoteWithDoubleQuotes(this.id);
-        }
+        return quoteWithDoubleQuotes(this.id);
     }
 
-    private String quoteWithBackticks(final String identifier) {
+    /**
+     * Quote a given identifier with backticks ({@code `}).
+     * <p>
+     * Only required for {@code CREATE TABLE} statements.
+     * </p>
+     *
+     * @param identifier
+     * @return quoted identifier
+     */
+    public String quoteWithBackticks(final String identifier) {
         return "`" + identifier + "`";
     }
 
@@ -68,7 +73,7 @@ public class AthenaIdentifier implements Identifier {
     }
 
     private static boolean validateCharacter(final int codePoint) {
-        return codePoint == '_' || Character.isLetter(codePoint) || Character.isDigit(codePoint);
+        return (codePoint == '_') || Character.isLetter(codePoint) || Character.isDigit(codePoint);
     }
 
     @Override
