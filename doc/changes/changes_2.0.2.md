@@ -12,11 +12,11 @@ Code name:
 
 ### Compile Dependency Updates
 
-* Updated `com.exasol:virtual-schema-common-jdbc:10.5.0` to `12.1.0`
+* Updated `com.exasol:virtual-schema-common-jdbc:10.5.0` to `12.0.0`
 
 ### Test Dependency Updates
 
-* Updated `com.exasol:virtual-schema-common-jdbc:10.5.0` to `12.1.0`
+* Updated `com.exasol:virtual-schema-common-jdbc:10.5.0` to `12.0.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.14.1` to `3.16.1`
 * Updated `org.junit.jupiter:junit-jupiter:5.9.2` to `5.10.2`
 * Updated `org.mockito:mockito-junit-jupiter:5.3.0` to `5.11.0`

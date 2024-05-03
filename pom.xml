@@ -8,7 +8,7 @@
     <description>Virtual Schema for connecting Athena as a data source to Exasol</description>
     <url>https://github.com/exasol/athena-virtual-schema/</url>
     <properties>
-        <vscjdbc.version>12.1.0</vscjdbc.version>
+        <vscjdbc.version>12.0.0</vscjdbc.version>
     </properties>
     <dependencies>
         <dependency>
