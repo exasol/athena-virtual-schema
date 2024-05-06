@@ -14,5 +14,9 @@
             "-Djava.util.logging.config.file=src/test/resources/logging.properties",
             "-Dcom.exasol.dockerdb.image=8.26.0",
         ]
+    },
+    "sonarlint.connectedMode.project": {
+        "connectionId": "exasol",
+        "projectKey": "com.exasol:athena-virtual-schema"
     }
 }
