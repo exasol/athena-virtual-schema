@@ -3,12 +3,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>athena-virtual-schema-generated-parent</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
     <packaging>pom</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>11</java.version>
+        <sonar.organization>exasol</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <test.excludeTags/>
     </properties>
     <licenses>
@@ -37,21 +39,45 @@
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.9.1.2184</version>
+                <version>3.11.0.3922</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-toolchains-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>toolchain</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <toolchains>
+                        <jdk>
+                            <version>${java.version}</version>
+                        </jdk>
+                    </toolchains>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <showWarnings>true</showWarnings>
+                    <compilerArgs>
+                        <arg>-Xlint:all</arg>
+                        <arg>-Werror</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.1</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -61,8 +87,11 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>[3.8.7,3.9.0)</version>
+                                    <version>3.6.3</version>
                                 </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>17</version>
+                                </requireJavaVersion>
                             </rules>
                         </configuration>
                     </execution>
@@ -71,7 +100,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
-                <version>1.4.1</version>
+                <version>1.6.0</version>
                 <configuration>
                     <updatePomFile>true</updatePomFile>
                     <flattenMode>oss</flattenMode>
@@ -110,7 +139,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.2.5</version>
                 <configuration>
                     <!-- Set the highest log level for coverage testing, so that we
           have a chance to reach branches in the logging lambdas too. -->
@@ -121,7 +150,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.15.0</version>
+                <version>2.16.2</version>
                 <executions>
                     <execution>
                         <id>display-updates</id>
@@ -134,12 +163,23 @@
                 </executions>
                 <configuration>
                     <rulesUri>file:///${project.basedir}/versionsMavenPluginRules.xml</rulesUri>
+                    <allowDowngrade>false</allowDowngrade>
+                    <allowIncrementalUpdates>true</allowIncrementalUpdates>
+                    <allowMinorUpdates>true</allowMinorUpdates>
+                    <allowMajorUpdates>true</allowMajorUpdates>
+                    <allowSnapshots>false</allowSnapshots>
+                    <generateBackupPoms>true</generateBackupPoms>
+                    <processDependencies>true</processDependencies>
+                    <processDependencyManagement>true</processDependencyManagement>
+                    <processParent>false</processParent>
+                    <autoLinkItems>true</autoLinkItems>
+                    <excludeReactor>true</excludeReactor>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.basepom.maven</groupId>
                 <artifactId>duplicate-finder-maven-plugin</artifactId>
-                <version>1.5.1</version>
+                <version>2.0.1</version>
                 <executions>
                     <execution>
                         <id>default</id>
@@ -157,7 +197,6 @@
                     <checkCompileClasspath>true</checkCompileClasspath>
                     <checkRuntimeClasspath>true</checkRuntimeClasspath>
                     <checkTestClasspath>false</checkTestClasspath>
-                    <quiet>true</quiet>
                     <preferLocal>true</preferLocal>
                     <useResultFile>false</useResultFile>
                 </configuration>
@@ -165,7 +204,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.5.0</version>
+                <version>3.7.1</version>
                 <configuration>
                     <descriptors>
                         <descriptor>src/assembly/all-dependencies.xml</descriptor>
@@ -215,7 +254,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.9</version>
+                <version>0.8.12</version>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
@@ -256,7 +295,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>1.2.3</version>
+                <version>2.0.2</version>
                 <executions>
                     <execution>
                         <id>verify</id>
