@@ -1,4 +1,4 @@
-# Virtual Schema for Athena 2.0.2, released 2025-10-30
+# Virtual Schema for Athena 2.0.2, released 2025-10-31
 
 Code name: Updates for PK
 
