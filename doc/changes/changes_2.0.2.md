@@ -4,7 +4,7 @@ Code name: Updates for PK
 
 ## Summary
 
-This release updates project-keeper, workflows, ...
+This release updates project-keeper, workflows and dependencies.
 
 ## Dependency Updates
 
