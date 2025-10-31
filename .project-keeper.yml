@@ -4,3 +4,7 @@ sources:
     modules:
       - jar_artifact
 linkReplacements:
+build:
+  runnerOs: ubuntu-latest # Exasol 7.1.x does not yet support the latest Ubuntu version
+  exasolDbVersions:
+    - "2025.1.3" # Tests fail with 8.32.0, see https://github.com/exasol/virtual-schema-common-document/issues/193
