@@ -33,3 +33,5 @@ venv/
 *.flattened-pom.xml
 /.apt_generated/
 /.apt_generated_tests/
+
+org.eclipse.jdt.apt.core.prefs
