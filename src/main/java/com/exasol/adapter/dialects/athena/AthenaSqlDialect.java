@@ -11,13 +11,12 @@ import static com.exasol.adapter.capabilities.ScalarFunctionCapability.*;
 import java.sql.SQLException;
 import java.util.Set;
 
-import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.capabilities.Capabilities;
-import com.exasol.adapter.dialects.AbstractSqlDialect;
-import com.exasol.adapter.dialects.QueryRewriter;
+import com.exasol.adapter.dialects.*;
 import com.exasol.adapter.dialects.rewriting.ImportIntoTemporaryTableQueryRewriter;
 import com.exasol.adapter.dialects.rewriting.SqlGenerationContext;
-import com.exasol.adapter.jdbc.*;
+import com.exasol.adapter.jdbc.RemoteMetadataReader;
+import com.exasol.adapter.jdbc.RemoteMetadataReaderException;
 import com.exasol.errorreporting.ExaError;
 
 /**
@@ -51,11 +50,10 @@ public class AthenaSqlDialect extends AbstractSqlDialect {
     /**
      * Create a new instance of the {@link AthenaSqlDialect}.
      *
-     * @param connectionFactory factory for the JDBC connection to the remote data source
-     * @param properties        user-defined adapter properties
+     * @param context context of the JDBC adapter
      */
-    public AthenaSqlDialect(final ConnectionFactory connectionFactory, final AdapterProperties properties) {
-        super(connectionFactory, properties, Set.of(CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY));
+    public AthenaSqlDialect(final JDBCAdapterContext context) {
+        super(context, Set.of(CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY));
     }
 
     @Override
@@ -130,7 +128,7 @@ public class AthenaSqlDialect extends AbstractSqlDialect {
     @Override
     protected RemoteMetadataReader createRemoteMetadataReader() {
         try {
-            return new AthenaMetadataReader(this.connectionFactory.getConnection(), this.properties);
+            return new AthenaMetadataReader(this.connectionFactory.getConnection(), this.properties, this.exaMetadata);
         } catch (final SQLException exception) {
             throw new RemoteMetadataReaderException(ExaError.messageBuilder("E-VSATHENA-2")
                     .message("Unable to create Athena remote metadata reader. Caused by: {{message}}",

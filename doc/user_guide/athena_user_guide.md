@@ -2,38 +2,38 @@
 
 The Athena SQL Dialect supports Amazon's [AWS Athena](https://aws.amazon.com/athena/), a managed service that lets you read files on S3 as if they were part of a relational database.
 
-## Registering the JDBC Driver in EXAOperation
+## Telemetry
 
-First download the [Athena JDBC driver](https://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html).
+This virtual schema uses `telemetry-java` to send anonymous feature-usage events.
 
-Now register the driver in EXAOperation:
+For details on what is collected and how to disable telemetry, see the [documentation](https://github.com/exasol/telemetry-java/blob/main/doc/app-user-guide.md).
 
-1. Click "Software"
-1. Switch to the tab "JDBC Drivers"
-1. Click "Add"
-1. In dialog "Add EXACluster JDBC driver" configure the JDBC driver (see table below)
+## Uploading the JDBC Driver to Exasol BucketFS
 
-   | Parameter                | Value                          |
-   |--------------------------|--------------------------------|
-   | Driver Name              | `ATHENA`                       |
-   | Main Class               | `com.simba.athena.jdbc.Driver` |
-   | Prefix                   | `jdbc:awsathena:`              |
-   | Disable Security Manager | true                           |
+1. Download the [Athena JDBC driver](https://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html).
+2. Upload the driver to BucketFS, see [BucketFS documentation](https://docs.exasol.com/db/latest/administration/on-premise/bucketfs/accessfiles.htm).
 
-1. Click "Add"
-1. Select a round radio button of the created driver
-1. Click "Browse..."
-1. Select JDBC driver file (`AthenaJDBC42.jar`)
-1. Click "Upload"
+    Hint: Put the driver into folder `default/drivers/jdbc/` to register it for [ExaLoader](#registering-the-jdbc-driver-for-exaloader), too.
 
-IMPORTANT: The latest Athena driver requires to **Disable Security Manager** because JDBC driver requires Java permissions which we do not grant by default.
+## Registering the JDBC driver for ExaLoader
 
-## Uploading the JDBC Driver to BucketFS
+In order to enable the ExaLoader to fetch data from the external database you must register the driver for ExaLoader as described in the [Installation procedure for JDBC drivers](https://github.com/exasol/docker-db/#installing-custom-jdbc-drivers).
+1. ExaLoader expects the driver in BucketFS folder `default/drivers/jdbc`.
 
-1. [Create a bucket in BucketFS](https://docs.exasol.com/administration/on-premise/bucketfs/create_new_bucket_in_bucketfs_service.htm)
-1. Upload the driver to BucketFS
+   If you uploaded the driver for UDF to a different folder, then you need to [upload](#uploading-the-jdbc-driver-to-exasol-bucketfs) the driver again.
+2. Additionally  you need to create file `settings.cfg` and [upload](#uploading-the-jdbc-driver-to-exasol-bucketfs) it to the same folder in BucketFS:
 
-This step is necessary since the UDF container the adapter runs in has no access to the JDBC drivers installed via EXAOperation but it can access BucketFS.
+   ```properties
+   DRIVERNAME=ATHENA
+   JAR=AthenaJDBC42.jar
+   DRIVERMAIN=com.simba.athena.jdbc.Driver
+   PREFIX=jdbc:awsathena:
+   NOSECURITY=YES
+   FETCHSIZE=100000
+   INSERTSIZE=-1
+   
+   ```
+   Ensure that the file ends with a trailing newline.
 
 ## Installing the Adapter Script
 
@@ -50,7 +50,7 @@ The SQL statement below creates the adapter script, defines the Java class that 
 ```sql
 CREATE OR REPLACE JAVA ADAPTER SCRIPT ADAPTER.JDBC_ADAPTER AS
     %scriptclass com.exasol.adapter.RequestDispatcher;
-    %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-10.5.0-athena-2.0.2.jar;
+    %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-14.0.2-athena-3.0.0.jar;
     %jar /buckets/<BFS service>/<bucket>/AthenaJDBC42.jar;
 /
 ;

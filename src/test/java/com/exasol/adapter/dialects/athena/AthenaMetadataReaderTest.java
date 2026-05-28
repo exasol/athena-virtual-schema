@@ -1,8 +1,9 @@
 package com.exasol.adapter.dialects.athena;
 
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.exasol.ExaMetadata;
 import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.dialects.*;
 import com.exasol.adapter.jdbc.BaseColumnMetadataReader;
@@ -21,11 +23,14 @@ import com.exasol.adapter.jdbc.BaseTableMetadataReader;
 class AthenaMetadataReaderTest {
     private AthenaMetadataReader reader;
     @Mock
-    private Connection connectionMock;
+    Connection connectionMock;
+    @Mock
+    ExaMetadata exaMetadataMock;
 
     @BeforeEach
     void beforeEach() {
-        this.reader = new AthenaMetadataReader(this.connectionMock, AdapterProperties.emptyProperties());
+        when(this.exaMetadataMock.getDatabaseVersion()).thenReturn("3.2.1");
+        this.reader = new AthenaMetadataReader(this.connectionMock, AdapterProperties.emptyProperties(), this.exaMetadataMock);
     }
 
     @Test

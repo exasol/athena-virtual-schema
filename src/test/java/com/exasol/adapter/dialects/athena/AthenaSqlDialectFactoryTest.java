@@ -7,7 +7,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.exasol.adapter.AdapterProperties;
+import com.exasol.adapter.dialects.JDBCAdapterContext;
 
 class AthenaSqlDialectFactoryTest {
     private AthenaSqlDialectFactory factory;
@@ -23,8 +23,17 @@ class AthenaSqlDialectFactoryTest {
     }
 
     @Test
+    void testGetSqlDialectVersion() {
+        assertThat(this.factory.getSqlDialectVersion(), equalTo("UNKNOWN"));
+    }
+
+    @Test
+    void testGetAdapterProjectShortTag() {
+        assertThat(this.factory.getAdapterProjectShortTag(), equalTo("VSATHENA"));
+    }
+
+    @Test
     void testCreateDialect() {
-        assertThat(this.factory.createSqlDialect(null, AdapterProperties.emptyProperties()),
-                instanceOf(AthenaSqlDialect.class));
+        assertThat(this.factory.createSqlDialect(JDBCAdapterContext.builder().build()), instanceOf(AthenaSqlDialect.class));
     }
 }
