@@ -25,7 +25,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.exasol.ExaMetadata;
 import com.exasol.adapter.AdapterProperties;
+import com.exasol.adapter.dialects.JDBCAdapterContext;
 import com.exasol.adapter.dialects.SqlDialect.NullSorting;
 import com.exasol.adapter.dialects.SqlDialect.StructureElementSupport;
 import com.exasol.adapter.jdbc.ConnectionFactory;
@@ -37,11 +39,14 @@ import com.exasol.adapter.properties.TableCountLimit;
 class AthenaSqlDialectTest {
     private AthenaSqlDialect dialect;
     @Mock
-    private ConnectionFactory connectionFactoryMock;
+    ConnectionFactory connectionFactoryMock;
+    @Mock
+    ExaMetadata exaMetadataMock;
 
     @BeforeEach
     void beforeEach() {
-        this.dialect = new AthenaSqlDialect(this.connectionFactoryMock, AdapterProperties.emptyProperties());
+        this.dialect = new AthenaSqlDialect(JDBCAdapterContext.builder().connectionFactory(this.connectionFactoryMock)
+                .properties(AdapterProperties.emptyProperties()).metadata(exaMetadataMock).build());
     }
 
     @Test
@@ -135,6 +140,7 @@ class AthenaSqlDialectTest {
 
     @Test
     void testMetadataReaderClass(@Mock final Connection connectionMock) throws SQLException {
+        when(this.exaMetadataMock.getDatabaseVersion()).thenReturn("3.2.1");
         when(this.connectionFactoryMock.getConnection()).thenReturn(connectionMock);
         assertThat(this.dialect.createRemoteMetadataReader(), instanceOf(AthenaMetadataReader.class));
     }
@@ -153,6 +159,6 @@ class AthenaSqlDialectTest {
         assertThat(this.dialect.getSupportedProperties(),
                 containsInAnyOrder(CONNECTION_NAME_PROPERTY, CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY,
                         TABLE_FILTER_PROPERTY, EXCLUDED_CAPABILITIES_PROPERTY, DEBUG_ADDRESS_PROPERTY,
-                        LOG_LEVEL_PROPERTY, DataTypeDetection.STRATEGY_PROPERTY, TableCountLimit.MAXTABLES_PROPERTY));
+                        LOG_LEVEL_PROPERTY, DataTypeDetection.STRATEGY_PROPERTY, TableCountLimit.MAXTABLES_PROPERTY, "TELEMETRY"));
     }
 }
