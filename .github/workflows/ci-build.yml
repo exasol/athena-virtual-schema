@@ -15,30 +15,24 @@ on:
       ready_for_review
     ]
     
+  workflow_dispatch: null
 jobs:
-  matrix-build:
+  build-and-test:
     runs-on: ubuntu-latest
     defaults:
       run: {
         shell: bash
       }
     permissions: {
-      contents: read
+      contents: read,
+      issues: read
     }
     concurrency: {
-      group: '${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version }}',
+      group: '${{ github.workflow }}-build-and-test-${{ github.ref }}',
       cancel-in-progress: true
     }
-    strategy:
-      fail-fast: false
-      matrix:
-        exasol_db_version: [
-          2026.1.0,
-          2025.1.10
-        ]
-        
-    env: {
-      DEFAULT_EXASOL_DB_VERSION: 2026.1.0
+    outputs: {
+      release-required: '${{ steps.check-release.outputs.release-required }}'
     }
     steps:
       - name: Free Disk Space
@@ -82,14 +76,10 @@ jobs:
           mvn --batch-mode clean verify \
               -DossindexSkip=true \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-              -DtrimStackTrace=false \
-              -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
-        env: {
-          EXASOL_DB_VERSION: '${{ matrix.exasol_db_version }}'
-        }
+              -DtrimStackTrace=false
       - name: Sonar analysis
         id: sonar-analysis
-        if: ${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}
+        if: ${{ env.SONAR_TOKEN != null }}
         run: |
           mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -DossindexSkip=true \
@@ -110,11 +100,11 @@ jobs:
         id: upload-artifacts
         uses: actions/upload-artifact@v7
         with: {
-          name: 'artifacts-exasol-${{ matrix.exasol_db_version }}',
+          name: artifacts,
           path: '${{ steps.build-pk-verify.outputs.release-artifacts }}',
           retention-days: 5
         }
-      - name: Configure broken links checker
+      - name: Configure link check
         id: configure-link-check
         run: |
           mkdir -p ./target
@@ -165,7 +155,7 @@ jobs:
         run: |
           mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=17 \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-              -DossindexSkip=true
+              -DossindexSkip=true \
   ossindex:
     runs-on: ubuntu-latest
     defaults:
@@ -239,7 +229,7 @@ jobs:
         }
   build:
     needs: [
-      matrix-build,
+      build-and-test,
       next-java-compatibility,
       ossindex,
       lint-github-actions
