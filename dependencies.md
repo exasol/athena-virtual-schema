@@ -21,10 +21,10 @@
 | [Test containers for Exasol on Docker][14]           | [MIT License][15]                 |
 | [Test Database Builder for Java][16]                 | [MIT License][17]                 |
 | [udf-debugging-java][18]                             | [MIT License][19]                 |
-| [SLF4J JDK14 Binding][20]                            | [MIT License][21]                 |
-| [AWS Java SDK :: Services :: AWS CloudFormation][22] | [Apache License, Version 2.0][23] |
-| [AWS Java SDK :: Services :: Amazon Athena][22]      | [Apache License, Version 2.0][23] |
-| [AWS Java SDK :: Services :: Signin][22]             | [Apache License, Version 2.0][23] |
+| [AWS Java SDK :: Services :: AWS CloudFormation][20] | [Apache License, Version 2.0][21] |
+| [AWS Java SDK :: Services :: Amazon Athena][20]      | [Apache License, Version 2.0][21] |
+| [AWS Java SDK :: Services :: Signin][20]             | [Apache License, Version 2.0][21] |
+| [SLF4J JDK14 Binding][22]                            | [MIT License][23]                 |
 | [JaCoCo :: Agent][24]                                | [EPL-2.0][25]                     |
 
 ## Plugin Dependencies
@@ -76,10 +76,10 @@
 [17]: https://github.com/exasol/test-db-builder-java/blob/main/LICENSE
 [18]: https://github.com/exasol/udf-debugging-java/
 [19]: https://github.com/exasol/udf-debugging-java/blob/main/LICENSE
-[20]: http://www.slf4j.org
-[21]: http://www.opensource.org/licenses/mit-license.php
-[22]: https://aws.amazon.com/sdkforjava
-[23]: https://aws.amazon.com/apache2.0
+[20]: https://aws.amazon.com/sdkforjava
+[21]: https://aws.amazon.com/apache2.0
+[22]: http://www.slf4j.org
+[23]: http://www.opensource.org/licenses/mit-license.php
 [24]: https://www.eclemma.org/jacoco/index.html
 [25]: https://www.eclipse.org/legal/epl-2.0/
 [26]: https://docs.sonarsource.com/sonarqube-server/latest/extension-guide/developing-a-plugin/plugin-basics/sonar-scanner-maven/sonar-maven-plugin/

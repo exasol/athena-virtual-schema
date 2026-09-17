@@ -129,14 +129,12 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <skip>${skipIntegrationTests}</skip>
-                    <!-- Workaround for https://github.com/exasol/project-keeper/issues/785 -->
-                    <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.7.5</version>
+                <version>5.7.6</version>
                 <executions>
                     <execution>
                         <goals>
