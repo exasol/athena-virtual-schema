@@ -10,7 +10,7 @@ For details on what is collected and how to disable telemetry, see the [document
 
 ## Uploading the JDBC Driver to Exasol BucketFS
 
-1. Download the [Athena JDBC driver](https://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html).
+1. Download the [Athena JDBC v3.x driver](https://docs.aws.amazon.com/athena/latest/ug/jdbc-v3-driver.html) as uber jar `athena-jdbc-<version>-with-dependencies.jar`.
 2. Upload the driver to BucketFS, see [BucketFS documentation](https://docs.exasol.com/db/latest/administration/on-premise/bucketfs/accessfiles.htm).
 
     Hint: Put the driver into folder `default/drivers/jdbc/` to register it for [ExaLoader](#registering-the-jdbc-driver-for-exaloader), too.
@@ -31,7 +31,7 @@ In order to enable the ExaLoader to fetch data from the external database you mu
    NOSECURITY=YES
    FETCHSIZE=100000
    INSERTSIZE=-1
-   
+
    ```
    Ensure that the file ends with a trailing newline.
 
@@ -116,7 +116,7 @@ IDENTIFIED BY '<access key>';
 
 In this example we used the maximum length of the Exasol Varchar datatype.
 
-## Troubleshooting 
+## Troubleshooting
 
 ### SELECT Query Hangs and Returns Timeout
 
@@ -129,9 +129,9 @@ If you created a Virtual Schema successfully, but a SELECT query runs forever wi
    nc -v athena.eu-west-1.amazonaws.com 443
    nc -v athena.eu-west-1.amazonaws.com 444
    ```
-   
+
    `athena.eu-west-1.amazonaws.com` is a public endpoint. If you use a private VPC endpoint with Athena, please specify it instead of public one. If a port is not opened, you will see output like this:
-   
+
    ```shell
    [root@n0011 ~]# nc -v athena.eu-west-1.amazonaws.com 444
    Ncat: Version 7.50 ( https://nmap.org/ncat )
@@ -141,7 +141,7 @@ If you created a Virtual Schema successfully, but a SELECT query runs forever wi
    Ncat: Trying next address...
    ...
    ```
-   
+
    In this case, you need to enable outbound traffic on the port (usually, it is blocked by your firewall).
 
 * Enable Athena JDBC driver logs and check them: maybe there is a missing permission. To enable the logs, you need to modify a connection string. Append this line to the connection string, recreate a connection and run a query again:
@@ -149,7 +149,7 @@ If you created a Virtual Schema successfully, but a SELECT query runs forever wi
    ```
    LogLevel=5;LogPath=/tmp/athena/
    ```
-   
+
    You can find the logs in the `/tmp/athena/` directory on the Exasol Node.
 
 * See also: https://aws.amazon.com/premiumsupport/knowledge-center/athena-connection-timeout-jdbc-odbc-driver/
