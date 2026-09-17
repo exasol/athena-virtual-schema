@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>athena-virtual-schema</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <name>Virtual Schema for Athena</name>
     <description>Virtual Schema for connecting Athena as a data source to Exasol</description>
     <url>https://github.com/exasol/athena-virtual-schema/</url>
     <properties>
-        <vscjdbc.version>14.0.2</vscjdbc.version>
+        <vscjdbc.version>14.0.5</vscjdbc.version>
     </properties>
     <dependencies>
         <dependency>
@@ -73,7 +73,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.6.2</version>
+                <version>5.7.5</version>
                 <executions>
                     <execution>
                         <goals>
@@ -87,7 +87,7 @@
     <parent>
         <artifactId>athena-virtual-schema-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>3.0.0</version>
+        <version>3.0.1</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
 </project>
