@@ -16,8 +16,15 @@ Code name:
 
 ### Test Dependency Updates
 
+* Added `com.exasol:exasol-testcontainers:8.0.2`
+* Added `com.exasol:test-db-builder-java:4.0.3`
+* Added `com.exasol:udf-debugging-java:0.6.20`
 * Updated `com.exasol:virtual-schema-common-jdbc:14.0.2` to `14.0.5`
 * Added `org.jacoco:org.jacoco.agent:0.8.15`
+* Added `org.slf4j:slf4j-jdk14:1.7.36`
+* Added `software.amazon.awssdk:athena:2.54.20`
+* Added `software.amazon.awssdk:cloudformation:2.54.20`
+* Added `software.amazon.awssdk:signin:2.54.20`
 
 ### Plugin Dependency Updates
 
