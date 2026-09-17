@@ -15,29 +15,36 @@ on:
       ready_for_review
     ]
     
-  workflow_dispatch: null
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  matrix-build:
+    runs-on: ubuntu-24.04
     defaults:
       run: {
         shell: bash
       }
     permissions: {
-      contents: read,
-      issues: read
+      contents: read
     }
     concurrency: {
-      group: '${{ github.workflow }}-build-and-test-${{ github.ref }}',
+      group: '${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version }}',
       cancel-in-progress: true
     }
-    outputs: {
-      release-required: '${{ steps.check-release.outputs.release-required }}'
+    strategy:
+      fail-fast: false
+      matrix:
+        exasol_db_version: [
+          2026.1.2,
+          2025.1.16,
+          8.29.13
+        ]
+        
+    env: {
+      DEFAULT_EXASOL_DB_VERSION: 2026.1.2
     }
     steps:
       - name: Free Disk Space
         id: free-disk-space
-        if: ${{ false }}
+        if: ${{ true }}
         run: |
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /usr/share/dotnet
@@ -76,10 +83,14 @@ jobs:
           mvn --batch-mode clean verify \
               -DossindexSkip=true \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-              -DtrimStackTrace=false
+              -DtrimStackTrace=false \
+              -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
+        env: {
+          EXASOL_DB_VERSION: '${{ matrix.exasol_db_version }}'
+        }
       - name: Sonar analysis
         id: sonar-analysis
-        if: ${{ env.SONAR_TOKEN != null }}
+        if: ${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}
         run: |
           mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -DossindexSkip=true \
@@ -128,11 +139,11 @@ jobs:
         id: upload-artifacts
         uses: actions/upload-artifact@v7
         with: {
-          name: artifacts,
+          name: 'artifacts-exasol-${{ matrix.exasol_db_version }}',
           path: '${{ steps.build-pk-verify.outputs.release-artifacts }}',
           retention-days: 5
         }
-      - name: Configure link check
+      - name: Configure broken links checker
         id: configure-link-check
         run: |
           mkdir -p ./target
@@ -183,7 +194,7 @@ jobs:
         run: |
           mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=17 \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-              -DossindexSkip=true \
+              -DossindexSkip=true
   ossindex:
     runs-on: ubuntu-latest
     defaults:
@@ -257,7 +268,7 @@ jobs:
         }
   build:
     needs: [
-      build-and-test,
+      matrix-build,
       next-java-compatibility,
       ossindex,
       lint-github-actions

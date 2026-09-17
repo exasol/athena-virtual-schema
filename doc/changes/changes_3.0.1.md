@@ -17,6 +17,7 @@ Code name:
 ### Test Dependency Updates
 
 * Updated `com.exasol:virtual-schema-common-jdbc:14.0.2` to `14.0.5`
+* Added `org.jacoco:org.jacoco.agent:0.8.15`
 
 ### Plugin Dependency Updates
 
@@ -25,7 +26,9 @@ Code name:
 * Updated `com.exasol:project-keeper-maven-plugin:5.6.2` to `5.7.5`
 * Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `io.github.git-commit-id:git-commit-id-maven-plugin:10.0.0` to `10.0.1`
+* Added `org.apache.maven.plugins:maven-dependency-plugin:3.11.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
+* Added `org.apache.maven.plugins:maven-failsafe-plugin:3.5.6`
 * Updated `org.apache.maven.plugins:maven-jar-plugin:3.5.0` to `3.5.1`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
