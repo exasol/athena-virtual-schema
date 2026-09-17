@@ -2,25 +2,21 @@ package com.exasol.adapter.dialects.athena;
 
 import java.util.Map;
 
-import software.amazon.awssdk.auth.credentials.AwsCredentials;
-import software.amazon.awssdk.auth.credentials.AwsSessionCredentials;
-import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.*;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.athena.AthenaClient;
 import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
 import software.amazon.awssdk.services.cloudformation.model.Stack;
-import software.amazon.awssdk.services.athena.AthenaClient;
 
 /** Provides AWS credentials and the manually deployed Athena fixture's configuration. */
 final class AthenaFixture implements AutoCloseable {
-    private final AwsCredentialsProvider credentialsProvider;
     private final CloudFormationClient cloudFormation;
     private final AthenaClient athenaClient;
     private final AwsCredentials credentials;
     private final Map<String, String> outputs;
 
-    private AthenaFixture(final AwsCredentialsProvider credentialsProvider, final CloudFormationClient cloudFormation,
+    private AthenaFixture(final CloudFormationClient cloudFormation,
             final AthenaClient athenaClient, final AwsCredentials credentials, final Map<String, String> outputs) {
-        this.credentialsProvider = credentialsProvider;
         this.cloudFormation = cloudFormation;
         this.athenaClient = athenaClient;
         this.credentials = credentials;
@@ -45,7 +41,7 @@ final class AthenaFixture implements AutoCloseable {
         requiredOutput(outputs, "Database");
         requiredOutput(outputs, "Table");
         requiredOutput(outputs, "OutputLocation");
-        return new AthenaFixture(credentialsProvider, cloudFormation, athenaClient, credentials, outputs);
+        return new AthenaFixture(cloudFormation, athenaClient, credentials, outputs);
     }
 
     String connectionUrl() {

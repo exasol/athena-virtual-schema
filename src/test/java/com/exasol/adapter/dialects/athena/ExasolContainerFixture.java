@@ -2,25 +2,20 @@ package com.exasol.adapter.dialects.athena;
 
 import static com.exasol.dbbuilder.dialects.exasol.AdapterScript.Language.JAVA;
 
-import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.Map;
-import java.util.concurrent.TimeoutException;
 
 import com.exasol.bucketfs.Bucket;
-import com.exasol.bucketfs.BucketAccessException;
 import com.exasol.containers.ExasolContainer;
 import com.exasol.containers.ExasolService;
 import com.exasol.dbbuilder.dialects.exasol.*;
-import com.exasol.drivers.JdbcDriver;
 import com.exasol.udfdebugging.UdfTestSetup;
 
 /** Owns the ephemeral Exasol container and its BucketFS driver/adapter deployment. */
 final class ExasolContainerFixture implements AutoCloseable {
     private static final String ADAPTER_JAR = "virtual-schema-dist-14.0.5-athena-3.0.1.jar";
     private static final Path ADAPTER_JAR_PATH = Path.of("target", ADAPTER_JAR);
-    private static final String DRIVER_NAME = "athena-jdbc-3.8.1-with-dependencies.jar";
     private static final String SCHEMA_NAME = "ATHENA_IT";
     private final ExasolContainer<? extends ExasolContainer<?>> container;
     private final Connection connection;
@@ -30,12 +25,13 @@ final class ExasolContainerFixture implements AutoCloseable {
     private final AdapterScript adapterScript;
     private int virtualSchemaCounter;
 
-    ExasolContainerFixture(final Path jdbcDriver) {
+    ExasolContainerFixture(final AthenaJdbcDriver jdbcDriver) {
         try {
             this.container = new ExasolContainer<>()
                     .withRequiredServices(ExasolService.BUCKETFS, ExasolService.UDF).withReuse(true);
             this.container.start();
-            uploadDependencies(this.container.getDefaultBucket(), jdbcDriver);
+            final Bucket bucket = this.container.getDefaultBucket();
+            bucket.uploadFile(ADAPTER_JAR_PATH, ADAPTER_JAR);
             installAthenaDriver(jdbcDriver);
             this.connection = this.container.createConnection("");
             this.statement = this.connection.createStatement();
@@ -44,7 +40,9 @@ final class ExasolContainerFixture implements AutoCloseable {
                     ExasolObjectConfiguration.builder().withJvmOptions(this.udfTestSetup.getJvmOptions()).build());
             final ExasolSchema schema = this.objectFactory.createSchema(SCHEMA_NAME);
             this.adapterScript = schema.createAdapterScript("ATHENA_ADAPTER", JAVA,
-                    "%scriptclass com.exasol.adapter.RequestDispatcher;\n%jar /buckets/bfsdefault/default/" + ADAPTER_JAR + ";\n");
+                    "%scriptclass com.exasol.adapter.RequestDispatcher;\n"
+                            + "%jar /buckets/bfsdefault/default/" + ADAPTER_JAR + ";\n"
+                            + "%jar /buckets/bfsdefault/default/drivers/jdbc/" + jdbcDriver.fileName() + ";\n");
         } catch (final Exception exception) {
             throw new IllegalStateException("Failed to prepare the Exasol integration-test container.", exception);
         }
@@ -54,7 +52,9 @@ final class ExasolContainerFixture implements AutoCloseable {
         final ConnectionDefinition definition = this.objectFactory.createConnectionDefinition("ATHENA_CONNECTION_" + this.virtualSchemaCounter,
                 athena.connectionUrl(), athena.accessKeyId(), athena.secretAccessKey());
         return this.objectFactory.createVirtualSchemaBuilder("ATHENA_VIRTUAL_SCHEMA_" + this.virtualSchemaCounter++)
-                .adapterScript(this.adapterScript).connectionDefinition(definition).addProperties(Map.of("SCHEMA_NAME", athena.database()))
+                .adapterScript(this.adapterScript)
+                .connectionDefinition(definition)
+                .addProperties(Map.of("SCHEMA_NAME", athena.database()))
                 .build();
     }
 
@@ -62,20 +62,8 @@ final class ExasolContainerFixture implements AutoCloseable {
         return this.statement;
     }
 
-    private void installAthenaDriver(final Path jdbcDriverPath) {
-        final JdbcDriver driver = JdbcDriver.builder("ATHENA_JDBC_DRIVER")
-                .enableSecurityManager(false)
-                .mainClass("software.amazon.athena.jdbc.AthenaDriver")
-                .prefix("jdbc:athena:")
-                .sourceFile(jdbcDriverPath)
-                .build();
-        this.container.getDriverManager().install(driver);
-    }
-
-    private static void uploadDependencies(final Bucket bucket, final Path jdbcDriver)
-            throws FileNotFoundException, BucketAccessException, TimeoutException {
-        bucket.uploadFile(ADAPTER_JAR_PATH, ADAPTER_JAR);
-        bucket.uploadFile(jdbcDriver, DRIVER_NAME);
+    private void installAthenaDriver(final AthenaJdbcDriver jdbcDriver) {
+        this.container.getDriverManager().install(jdbcDriver.asExasolDriver());
     }
 
     @Override

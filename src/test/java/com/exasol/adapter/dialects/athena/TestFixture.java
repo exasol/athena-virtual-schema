@@ -1,0 +1,50 @@
+package com.exasol.adapter.dialects.athena;
+
+import java.sql.Statement;
+
+import com.exasol.dbbuilder.dialects.exasol.VirtualSchema;
+
+final class TestFixture implements AutoCloseable {
+    private final AthenaFixture athena;
+    private final ExasolContainerFixture exasol;
+
+    private TestFixture(final AthenaFixture athena, final ExasolContainerFixture exasol) {
+        this.athena = athena;
+        this.exasol = exasol;
+    }
+
+    static TestFixture create() {
+        final AthenaFixture athena = AthenaFixture.create();
+        try {
+            return new TestFixture(athena, new ExasolContainerFixture(AthenaJdbcDriver.download()));
+        } catch (final RuntimeException exception) {
+            athena.close();
+            throw exception;
+        }
+    }
+
+    VirtualSchema createVirtualSchema() {
+        return this.exasol.createVirtualSchema(this.athena);
+    }
+
+    Statement statement() {
+        return this.exasol.statement();
+    }
+
+    String table() {
+        return this.athena.table();
+    }
+
+    boolean hasExecutedQueryContaining(final String fragment) {
+        return this.athena.hasExecutedQueryContaining(fragment);
+    }
+
+    @Override
+    public void close() {
+        try {
+            this.exasol.close();
+        } finally {
+            this.athena.close();
+        }
+    }
+}

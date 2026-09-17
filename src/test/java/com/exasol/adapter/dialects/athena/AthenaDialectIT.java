@@ -9,20 +9,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import com.exasol.dbbuilder.dialects.exasol.VirtualSchema;
 
 /** Full-path tests for Exasol, the adapter, Athena JDBC 3.x, and the shared AWS fixture. */
 class AthenaDialectIT {
-    private static AthenaVirtualSchemaFixture fixture;
+    private static TestFixture fixture;
     private static VirtualSchema virtualSchema;
 
     @BeforeAll
     static void beforeAll() {
-        fixture = AthenaVirtualSchemaFixture.create();
+        fixture = TestFixture.create();
         virtualSchema = fixture.createVirtualSchema();
     }
 
@@ -35,8 +33,8 @@ class AthenaDialectIT {
 
     @Test
     void importsMetadataAndPushesDownProjectionFilterOrderAndLimit() throws SQLException {
-        try (ResultSet result = fixture.statement().executeQuery("SELECT name FROM " + virtualSchema.getName() + ".\""
-                + fixture.table() + "\" WHERE active = TRUE ORDER BY id DESC LIMIT 2")) {
+        try (ResultSet result = fixture.statement().executeQuery("SELECT \"name\" FROM " + virtualSchema.getName()
+                + ".\"" + fixture.table() + "\" WHERE \"active\" = TRUE ORDER BY \"id\" DESC LIMIT 2")) {
             final List<String> names = new ArrayList<>();
             while (result.next()) {
                 names.add(result.getString(1));
@@ -48,7 +46,7 @@ class AthenaDialectIT {
 
     @Test
     void pushesDownScalarAndAggregateExpressions() throws SQLException {
-        try (ResultSet result = fixture.statement().executeQuery("SELECT COUNT(*), SUM(amount), UPPER(MIN(name)) FROM "
+        try (ResultSet result = fixture.statement().executeQuery("SELECT COUNT(*), SUM(\"amount\"), UPPER(MIN(\"name\")) FROM "
                 + virtualSchema.getName() + ".\"" + fixture.table() + "\"")) {
             assertThat(result.next(), org.hamcrest.Matchers.is(true));
             assertThat(result.getLong(1), org.hamcrest.Matchers.is(3L));

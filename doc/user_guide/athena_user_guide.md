@@ -25,9 +25,9 @@ In order to enable the ExaLoader to fetch data from the external database you mu
 
    ```properties
    DRIVERNAME=ATHENA
-   JAR=AthenaJDBC42.jar
-   DRIVERMAIN=com.simba.athena.jdbc.Driver
-   PREFIX=jdbc:awsathena:
+   JAR=athena-jdbc-<version>-with-dependencies.jar
+   DRIVERMAIN=com.amazon.athena.jdbc.AthenaDriver
+   PREFIX=jdbc:athena:
    NOSECURITY=YES
    FETCHSIZE=100000
    INSERTSIZE=-1
