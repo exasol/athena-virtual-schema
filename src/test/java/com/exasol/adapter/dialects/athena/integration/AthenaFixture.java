@@ -1,6 +1,7 @@
-package com.exasol.adapter.dialects.athena;
+package com.exasol.adapter.dialects.athena.integration;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import software.amazon.awssdk.auth.credentials.*;
 import software.amazon.awssdk.regions.Region;
@@ -31,12 +32,15 @@ final class AthenaFixture implements AutoCloseable {
         final AwsCredentials credentials = credentialsProvider.resolveCredentials();
         final CloudFormationClient cloudFormation = CloudFormationClient.builder().region(Region.of(region))
                 .credentialsProvider(credentialsProvider).build();
-        final AthenaClient athenaClient = AthenaClient.builder().region(Region.of(region)).credentialsProvider(credentialsProvider)
+        final AthenaClient athenaClient = AthenaClient.builder()
+                .region(Region.of(region))
+                .credentialsProvider(credentialsProvider)
                 .build();
-        final Stack stack = cloudFormation.describeStacks(request -> request.stackName(stackName)).stacks().stream().findFirst()
+        final Stack stack = cloudFormation.describeStacks(request -> request.stackName(stackName))
+                .stacks().stream().findFirst()
                 .orElseThrow(() -> new IllegalStateException("CloudFormation stack '" + stackName + "' does not exist."));
         final Map<String, String> outputs = stack.outputs().stream()
-                .collect(java.util.stream.Collectors.toUnmodifiableMap(output -> output.outputKey(), output -> output.outputValue()));
+                .collect(Collectors.toUnmodifiableMap(output -> output.outputKey(), output -> output.outputValue()));
         requiredOutput(outputs, "Workgroup");
         requiredOutput(outputs, "Database");
         requiredOutput(outputs, "Table");

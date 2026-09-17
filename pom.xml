@@ -88,6 +88,12 @@
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
+            <artifactId>hamcrest-resultset-matcher</artifactId>
+            <version>1.7.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.exasol</groupId>
             <artifactId>udf-debugging-java</artifactId>
             <version>0.6.20</version>
             <scope>test</scope>

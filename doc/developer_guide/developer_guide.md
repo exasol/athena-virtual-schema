@@ -9,10 +9,14 @@ The integration tests for this repository are disabled, but it is possible to ex
 The Athena integration tests run a real Exasol container against a manually deployed, shared AWS fixture. They are
 disabled by default and are not part of the GitHub Actions build.
 
-1. Build and deploy the standalone CDK app in [`ci-isolation/`](../../ci-isolation/README.md).
-2. Create `test_config.properties` based on this template:
+1. Build and deploy the standalone CDK app in `ci-isolation/`:
+   ```sh
+   cd ci-isolation
+   cdk deploy
+   ```
+2. Create `test_config.properties`:
    ```properties
-   awsProfile = athena-virtual-schema-it
+   awsProfile = default
    awsRegion = eu-central-1
    cloudFormationStack = AthenaVirtualSchemaFixture
    ```

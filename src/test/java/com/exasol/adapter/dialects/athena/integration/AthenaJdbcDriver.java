@@ -1,10 +1,11 @@
-package com.exasol.adapter.dialects.athena;
+package com.exasol.adapter.dialects.athena.integration;
 
 import java.io.*;
 import java.net.URI;
 import java.net.http.*;
 import java.nio.file.*;
-import java.security.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import com.exasol.drivers.JdbcDriver;
 
@@ -25,17 +26,10 @@ final class AthenaJdbcDriver {
     static AthenaJdbcDriver download() {
         try {
             Files.createDirectories(FILE.getParent());
-            if (!Files.isRegularFile(FILE) || !SHA_256.equals(sha256(FILE))) {
-                final HttpResponse<InputStream> response = HttpClient.newHttpClient().send(
-                        HttpRequest.newBuilder(DOWNLOAD_URI).GET().build(), HttpResponse.BodyHandlers.ofInputStream());
-                if (response.statusCode() != 200) {
-                    throw new IllegalStateException("Athena JDBC driver download returned HTTP " + response.statusCode() + ".");
-                }
-                try (InputStream body = response.body()) {
-                    Files.copy(body, FILE, StandardCopyOption.REPLACE_EXISTING);
-                }
+            if (!Files.isRegularFile(FILE) || invalidChecksum()) {
+                doDownload();
             }
-            if (!SHA_256.equals(sha256(FILE))) {
+            if (invalidChecksum()) {
                 throw new IllegalStateException("Downloaded Athena JDBC driver checksum does not match the pinned SHA-256.");
             }
             return new AthenaJdbcDriver(FILE);
@@ -44,6 +38,21 @@ final class AthenaJdbcDriver {
             throw new IllegalStateException("Failed to download the pinned Athena JDBC driver.", exception);
         } catch (final IOException exception) {
             throw new UncheckedIOException("Failed to download the pinned Athena JDBC driver.", exception);
+        }
+    }
+
+    private static boolean invalidChecksum() {
+        return !SHA_256.equals(sha256(FILE));
+    }
+
+    private static void doDownload() throws IOException, InterruptedException {
+        final HttpResponse<InputStream> response = HttpClient.newHttpClient().send(
+                HttpRequest.newBuilder(DOWNLOAD_URI).GET().build(), HttpResponse.BodyHandlers.ofInputStream());
+        if (response.statusCode() != 200) {
+            throw new IllegalStateException("Athena JDBC driver download returned HTTP " + response.statusCode() + ".");
+        }
+        try (InputStream body = response.body()) {
+            Files.copy(body, FILE, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 

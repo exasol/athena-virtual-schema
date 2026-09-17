@@ -1,4 +1,4 @@
-package com.exasol.adapter.dialects.athena;
+package com.exasol.adapter.dialects.athena.integration;
 
 import static com.exasol.dbbuilder.dialects.exasol.AdapterScript.Language.JAVA;
 

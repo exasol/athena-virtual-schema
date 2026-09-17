@@ -1,4 +1,4 @@
-package com.exasol.adapter.dialects.athena;
+package com.exasol.adapter.dialects.athena.integration;
 
 import java.io.*;
 import java.nio.file.*;

@@ -17,6 +17,7 @@ Code name:
 ### Test Dependency Updates
 
 * Added `com.exasol:exasol-testcontainers:8.0.2`
+* Added `com.exasol:hamcrest-resultset-matcher:1.7.3`
 * Added `com.exasol:test-db-builder-java:4.0.3`
 * Added `com.exasol:udf-debugging-java:0.6.20`
 * Updated `com.exasol:virtual-schema-common-jdbc:14.0.2` to `14.0.5`
