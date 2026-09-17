@@ -9,6 +9,8 @@
     <url>https://github.com/exasol/athena-virtual-schema/</url>
     <properties>
         <vscjdbc.version>14.0.5</vscjdbc.version>
+        <!-- Integration tests disabled, see doc/developer_guide/developer_guide.md for details. -->
+        <skipIntegrationTests>true</skipIntegrationTests>
     </properties>
     <dependencies>
         <dependency>
@@ -68,6 +70,15 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
                     <finalName>virtual-schema-dist-${vscjdbc.version}-athena-${project.version}</finalName>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skip>${skipIntegrationTests}</skip>
+                    <!-- Workaround for https://github.com/exasol/project-keeper/issues/785 -->
+                    <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
             <plugin>
