@@ -10,6 +10,7 @@ import software.amazon.awscdk.CfnOutputProps;
 import software.amazon.awscdk.RemovalPolicy;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
+import software.amazon.awscdk.Tags;
 import software.amazon.awscdk.services.athena.CfnWorkGroup;
 import software.amazon.awscdk.services.athena.CfnWorkGroupProps;
 import software.amazon.awscdk.services.glue.CfnDatabase;
@@ -28,12 +29,13 @@ public class AthenaFixtureStack extends Stack {
     private static final String TABLE_NAME = "pushdown_fixture";
     private static final String WORKGROUP_NAME = "athena-virtual-schema-it";
 
-    public AthenaFixtureStack(final Construct scope, final String id) {
-        this(scope, id, null);
+    public AthenaFixtureStack(final Construct scope, final String id, final Map<String, String> tags) {
+        this(scope, id, null, tags);
     }
 
-    public AthenaFixtureStack(final Construct scope, final String id, final StackProps props) {
+    private AthenaFixtureStack(final Construct scope, final String id, final StackProps props, final Map<String, String> tags) {
         super(scope, id, props);
+        tags.forEach((key, value) -> Tags.of(this).add(key, value));
         final Bucket fixtureBucket = Bucket.Builder.create(this, "FixtureBucket")
                 .encryption(BucketEncryption.S3_MANAGED)
                 .versioned(false)

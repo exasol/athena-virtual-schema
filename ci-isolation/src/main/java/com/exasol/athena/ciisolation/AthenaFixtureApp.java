@@ -9,7 +9,7 @@ public final class AthenaFixtureApp {
 
     public static void main(final String[] args) {
         final App app = new App();
-        new AthenaFixtureStack(app, "AthenaVirtualSchemaFixture");
+        new AthenaFixtureStack(app, "AthenaVirtualSchemaFixture", FixtureTags.load());
         app.synth();
     }
 }
