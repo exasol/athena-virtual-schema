@@ -1,4 +1,4 @@
-# Virtual Schema for Athena 3.0.1, released 2026-09-18
+# Virtual Schema for Athena 3.0.1, released 2026-09-??
 
 Code name: Athena JDBC version 3
 
@@ -7,8 +7,6 @@ Code name: Athena JDBC version 3
 The user guide now recommends the Athena JDBC v3 driver and documents its v3 connection configuration.
 
 ## Bufixes
-
-* #29: Fixed loading of timestamps
 
 ## Dependency Updates
 
