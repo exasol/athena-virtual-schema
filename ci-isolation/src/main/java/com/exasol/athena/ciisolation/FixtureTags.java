@@ -15,11 +15,11 @@ final class FixtureTags {
     static Map<String, String> load() {
         final Properties properties = getConfigFile();
         return Map.of(
-                "exa:Owner", required(properties, "exaOwner"),
+                "exa:Owner", required(properties, "tag.exaOwner"),
                 "exa:Environment", "development",
-                "exa:Department", required(properties, "exaDepartment"),
-                "exa:CostCenter", required(properties, "exaCostCenter"),
-                "exa:Project", required(properties, "exaProject"),
+                "exa:Department", required(properties, "tag.exaDepartment"),
+                "exa:CostCenter", required(properties, "tag.exaCostCenter"),
+                "exa:Project", required(properties, "tag.exaProject"),
                 "exa:Workload", "Integration test for Athena Virtual Schema");
     }
 

@@ -14,10 +14,11 @@ disabled by default and are not part of the GitHub Actions build.
    awsProfile = default
    awsRegion = eu-central-1
    cloudFormationStack = AthenaVirtualSchemaFixture
-   exaOwner = <owner>
-   exaDepartment = <department>
-   exaCostCenter = <cost center>
-   exaProject = <project>
+
+   tag.exaOwner = <owner>
+   tag.exaDepartment = <department>
+   tag.exaCostCenter = <cost center>
+   tag.exaProject = <project>
    ```
 
 2. Build and deploy the standalone CDK app in `ci-isolation/`:
