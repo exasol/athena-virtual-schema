@@ -1,12 +1,14 @@
 package com.exasol.adapter.dialects.athena.integration;
 
+import static java.util.stream.Collectors.toUnmodifiableMap;
+
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import software.amazon.awssdk.auth.credentials.*;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.athena.AthenaClient;
 import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
+import software.amazon.awssdk.services.cloudformation.model.Output;
 import software.amazon.awssdk.services.cloudformation.model.Stack;
 
 /** Provides AWS credentials and the manually deployed Athena fixture's configuration. */
@@ -39,8 +41,7 @@ final class AthenaFixture implements AutoCloseable {
         final Stack stack = cloudFormation.describeStacks(request -> request.stackName(stackName))
                 .stacks().stream().findFirst()
                 .orElseThrow(() -> new IllegalStateException("CloudFormation stack '" + stackName + "' does not exist."));
-        final Map<String, String> outputs = stack.outputs().stream()
-                .collect(Collectors.toUnmodifiableMap(output -> output.outputKey(), output -> output.outputValue()));
+        final Map<String, String> outputs = stack.outputs().stream().collect(toUnmodifiableMap(Output::outputKey, Output::outputValue));
         requiredOutput(outputs, "Workgroup");
         requiredOutput(outputs, "Database");
         requiredOutput(outputs, "Table");
