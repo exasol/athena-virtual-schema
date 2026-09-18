@@ -25,4 +25,6 @@ disabled by default and are not part of the GitHub Actions build.
 
 Run integration tests:
 * Run `AthenaDialectIT` from your IDE or
-* Run `mvn verify -DskipIntegrationTests=false`
+* Run `mvn verify -DskipIntegrationTests=false -Dtest.coverage=false`
+
+   Note that disabling coverage collection is required on Lima as a workaround for [udf-debugging-java#90](https://github.com/exasol/udf-debugging-java/issues/90).
