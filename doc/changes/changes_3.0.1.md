@@ -4,6 +4,8 @@ Code name:
 
 ## Summary
 
+The user guide now recommends the Athena JDBC v3 driver and documents its v3 connection configuration.
+
 ## Features
 
 * ISSUE_NUMBER: description
