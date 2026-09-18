@@ -56,7 +56,7 @@ CREATE OR REPLACE JAVA ADAPTER SCRIPT ADAPTER.JDBC_ADAPTER AS
 ;
 ```
 
-Use the actual file names that you uploaded to BucketFS. The driver JAR must be the same v3 uber JAR configured for ExaLoader, if applicable.
+Use the actual file names that you uploaded to BucketFS. The driver JAR must be the same v3 uber JAR configured for ExaLoader.
 
 ## Defining a Named Connection
 

@@ -25,7 +25,7 @@ final class ExasolContainerFixture implements AutoCloseable {
     private final AdapterScript adapterScript;
     private int virtualSchemaCounter;
 
-    ExasolContainerFixture(final AthenaJdbcDriver jdbcDriver) {
+    ExasolContainerFixture(final AthenaJdbcDriverManager jdbcDriver) {
         try {
             this.container = new ExasolContainer<>()
                     .withRequiredServices(ExasolService.BUCKETFS, ExasolService.UDF).withReuse(true);
@@ -50,11 +50,11 @@ final class ExasolContainerFixture implements AutoCloseable {
 
     VirtualSchema createVirtualSchema(final AthenaFixture athena) {
         final ConnectionDefinition definition = this.objectFactory.createConnectionDefinition("ATHENA_CONNECTION_" + this.virtualSchemaCounter,
-                athena.connectionUrl(), athena.accessKeyId(), athena.secretAccessKey());
+                athena.connectionUrl(), athena.getAccessKeyId(), athena.getSecretAccessKey());
         return this.objectFactory.createVirtualSchemaBuilder("ATHENA_VIRTUAL_SCHEMA_" + this.virtualSchemaCounter++)
                 .adapterScript(this.adapterScript)
                 .connectionDefinition(definition)
-                .addProperties(Map.of("SCHEMA_NAME", athena.database()))
+                .addProperties(Map.of("SCHEMA_NAME", athena.getDatabase()))
                 .build();
     }
 
@@ -62,7 +62,7 @@ final class ExasolContainerFixture implements AutoCloseable {
         return this.statement;
     }
 
-    private void installAthenaDriver(final AthenaJdbcDriver jdbcDriver) {
+    private void installAthenaDriver(final AthenaJdbcDriverManager jdbcDriver) {
         this.container.getDriverManager().install(jdbcDriver.asExasolDriver());
     }
 

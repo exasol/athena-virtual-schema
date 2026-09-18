@@ -8,10 +8,10 @@ import java.util.UUID;
 import software.amazon.awssdk.auth.credentials.*;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.athena.AthenaClient;
+import software.amazon.awssdk.services.athena.model.QueryExecutionState;
 import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
 import software.amazon.awssdk.services.cloudformation.model.Output;
 import software.amazon.awssdk.services.cloudformation.model.Stack;
-import software.amazon.awssdk.services.athena.model.QueryExecutionState;
 
 /** Provides AWS credentials and the manually deployed Athena fixture's configuration. */
 final class AthenaFixture implements AutoCloseable {
@@ -60,33 +60,33 @@ final class AthenaFixture implements AutoCloseable {
                 + sessionToken;
     }
 
-    String accessKeyId() {
+    String getAccessKeyId() {
         return this.credentials.accessKeyId();
     }
 
-    String secretAccessKey() {
+    String getSecretAccessKey() {
         return this.credentials.secretAccessKey();
     }
 
-    String database() {
+    String getDatabase() {
         return output("Database");
     }
 
-    String table() {
+    String getTable() {
         return output("Table");
     }
 
     String createZonedTimestampIcebergTable() {
         final String tableName = "zoned_timestamp_" + UUID.randomUUID().toString().replace("-", "");
         final String tableLocation = output("OutputLocation") + "iceberg/" + tableName + "/";
-        executeQuery("CREATE TABLE " + database() + "." + tableName
+        executeQuery("CREATE TABLE " + getDatabase() + "." + tableName
                 + " WITH (table_type = 'ICEBERG', is_external = false, location = '" + tableLocation + "')"
                 + " AS SELECT TIMESTAMP '2024-03-25 11:12:13.456 UTC' AS zoned_timestamp");
         return tableName;
     }
 
     void dropTable(final String tableName) {
-        executeQuery("DROP TABLE IF EXISTS " + database() + "." + tableName);
+        executeQuery("DROP TABLE IF EXISTS " + getDatabase() + "." + tableName);
     }
 
     boolean hasExecutedQueryContaining(final String fragment) {
@@ -98,7 +98,7 @@ final class AthenaFixture implements AutoCloseable {
 
     private void executeQuery(final String query) {
         final String queryExecutionId = this.athenaClient.startQueryExecution(request -> request.queryString(query)
-                .workGroup(output("Workgroup")).queryExecutionContext(context -> context.database(database())))
+                .workGroup(output("Workgroup")).queryExecutionContext(context -> context.database(getDatabase())))
                 .queryExecutionId();
         waitForQuery(queryExecutionId, query);
     }

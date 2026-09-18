@@ -6,8 +6,7 @@ The integration tests for this repository are disabled, but it is possible to ex
 
 ### Athena Integration Test Prerequisites
 
-The Athena integration tests run a real Exasol container against a manually deployed, shared AWS fixture. They are
-disabled by default and are not part of the GitHub Actions build.
+The Athena integration tests run a real Exasol container against a manually deployed, shared AWS fixture. They are disabled by default and are not part of the GitHub Actions build.
 
 1. Create `test_config.properties`:
    ```properties
@@ -27,7 +26,7 @@ disabled by default and are not part of the GitHub Actions build.
    cdk deploy
    ```
 
-### Starting Disabled Integration Test Locally
+### Starting the Integration Test Locally
 
 Run integration tests:
 * Run `AthenaDialectIT` from your IDE or

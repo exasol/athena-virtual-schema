@@ -1,6 +1,6 @@
 # Virtual Schema for Athena 3.0.1, released 2026-09-18
 
-Code name: Upgrade Athena JDBC Driver
+Code name: Athena JDBC version 3
 
 ## Summary
 

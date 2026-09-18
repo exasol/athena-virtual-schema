@@ -14,6 +14,12 @@ import org.junit.jupiter.api.*;
 
 import com.exasol.dbbuilder.dialects.exasol.VirtualSchema;
 
+/**
+ * Integration tests for the Athena dialect.
+ * <p>
+ * AWS test fixture already contains an Athena database with table containing data from {@code ci-isolation/src/main/resources/fixture/athena_test_data.csv}.
+ * </p>
+ */
 class AthenaDialectIT {
     private static TestFixture fixture;
     private static VirtualSchema virtualSchema;

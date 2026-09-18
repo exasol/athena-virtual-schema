@@ -10,7 +10,7 @@ import java.security.NoSuchAlgorithmException;
 import com.exasol.drivers.JdbcDriver;
 
 /** Pinned Athena JDBC driver artifact used by the integration tests. */
-final class AthenaJdbcDriver {
+final class AthenaJdbcDriverManager {
     // https://docs.aws.amazon.com/athena/latest/ug/jdbc-v3-driver.html
     private static final String FILE_NAME = "athena-jdbc-3.8.1-with-dependencies.jar";
     private static final URI DOWNLOAD_URI = URI.create(
@@ -19,20 +19,20 @@ final class AthenaJdbcDriver {
     private static final Path FILE = Path.of("target", FILE_NAME);
     private final Path file;
 
-    private AthenaJdbcDriver(final Path file) {
+    private AthenaJdbcDriverManager(final Path file) {
         this.file = file;
     }
 
-    static AthenaJdbcDriver download() {
+    static AthenaJdbcDriverManager download() {
         try {
             Files.createDirectories(FILE.getParent());
-            if (!Files.isRegularFile(FILE) || invalidChecksum()) {
+            if (!Files.isRegularFile(FILE) || !validateChecksum()) {
                 doDownload();
             }
-            if (invalidChecksum()) {
+            if (!validateChecksum()) {
                 throw new IllegalStateException("Downloaded Athena JDBC driver checksum does not match the pinned SHA-256.");
             }
-            return new AthenaJdbcDriver(FILE);
+            return new AthenaJdbcDriverManager(FILE);
         } catch (final InterruptedException exception) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException("Failed to download the pinned Athena JDBC driver.", exception);
@@ -41,8 +41,8 @@ final class AthenaJdbcDriver {
         }
     }
 
-    private static boolean invalidChecksum() {
-        return !SHA_256.equals(sha256(FILE));
+    private static boolean validateChecksum() {
+        return SHA_256.equals(sha256(FILE));
     }
 
     private static void doDownload() throws IOException, InterruptedException {

@@ -16,7 +16,7 @@ final class TestFixture implements AutoCloseable {
     static TestFixture create() {
         final AthenaFixture athena = AthenaFixture.create();
         try {
-            return new TestFixture(athena, new ExasolContainerFixture(AthenaJdbcDriver.download()));
+            return new TestFixture(athena, new ExasolContainerFixture(AthenaJdbcDriverManager.download()));
         } catch (final RuntimeException exception) {
             athena.close();
             throw exception;
@@ -32,7 +32,7 @@ final class TestFixture implements AutoCloseable {
     }
 
     String table() {
-        return this.athena.table();
+        return this.athena.getTable();
     }
 
     String createZonedTimestampIcebergTable() {

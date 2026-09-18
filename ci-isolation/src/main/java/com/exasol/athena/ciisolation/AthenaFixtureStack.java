@@ -26,7 +26,7 @@ import software.constructs.Construct;
 /** Defines the shared, read-only data fixture used by local Athena integration tests. */
 public class AthenaFixtureStack extends Stack {
     private static final String DATABASE_NAME = "athena_virtual_schema_it";
-    private static final String TABLE_NAME = "pushdown_fixture";
+    private static final String TABLE_NAME = "athena_test_data";
     private static final String WORKGROUP_NAME = "athena-virtual-schema-it";
 
     public AthenaFixtureStack(final Construct scope, final String id, final Map<String, String> tags) {
