@@ -69,7 +69,7 @@ USER '<access key ID>'
 IDENTIFIED BY '<access key>';
 ```
 
-`Region` and `OutputLocation` are the v3 parameter names. `Workgroup` defaults to `primary` and `Catalog` defaults to `AwsDataCatalog`, so they can be omitted when those defaults are suitable. `OutputLocation` can also be omitted when the selected workgroup specifies an output location. For other authentication methods and connection parameters, see the [Athena JDBC 3.x connection-parameter documentation](https://docs.aws.amazon.com/athena/latest/ug/jdbc-v3-driver-connection-parameters.html).
+`Workgroup` defaults to `primary` and `Catalog` defaults to `AwsDataCatalog`, so they can be omitted when those defaults are suitable. `OutputLocation` can also be omitted when the selected workgroup specifies an output location. For other authentication methods and connection parameters, see the [Athena JDBC 3.x connection-parameter documentation](https://docs.aws.amazon.com/athena/latest/ug/jdbc-v3-driver-connection-parameters.html).
 
 For the connection troubleshooting refer to the [AWS documentation](https://aws.amazon.com/premiumsupport/knowledge-center/). Search for Amazon Athena on the page.
 
