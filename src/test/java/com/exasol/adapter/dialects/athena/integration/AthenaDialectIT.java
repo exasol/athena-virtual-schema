@@ -3,6 +3,8 @@ package com.exasol.adapter.dialects.athena.integration;
 import static com.exasol.matcher.ResultSetStructureMatcher.table;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
@@ -50,5 +52,19 @@ class AthenaDialectIT {
         assertThat(fixture.statement().executeQuery("SELECT \"created_at\" FROM " + virtualSchema.getName()
                 + ".\"" + fixture.table() + "\" WHERE \"id\" = 1"),
                 table().withUtcCalendar().row(Timestamp.valueOf("2023-01-11 15:15:14")).matches());
+    }
+
+    @Test
+    void reproducesFailureForTimestampWithTimeZoneFromIcebergTable() {
+        final String tableName = fixture.createZonedTimestampIcebergTable();
+        try {
+            final VirtualSchema icebergVirtualSchema = fixture.createVirtualSchema();
+            final SQLException exception = assertThrows(SQLException.class,
+                    () -> fixture.statement().executeQuery("SELECT \"zoned_timestamp\" FROM " + icebergVirtualSchema.getName()
+                            + ".\"" + tableName + "\""));
+            assertThat(exception.getMessage(), startsWith("ETL-5402: JDBC-Client-Error: JDBC SQL Type for column=0 (starting at 0) value=2014 is unknown."));
+        } finally {
+            fixture.dropTable(tableName);
+        }
     }
 }

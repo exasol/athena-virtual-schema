@@ -35,6 +35,14 @@ final class TestFixture implements AutoCloseable {
         return this.athena.table();
     }
 
+    String createZonedTimestampIcebergTable() {
+        return this.athena.createZonedTimestampIcebergTable();
+    }
+
+    void dropTable(final String tableName) {
+        this.athena.dropTable(tableName);
+    }
+
     boolean hasExecutedQueryContaining(final String fragment) {
         return this.athena.hasExecutedQueryContaining(fragment);
     }

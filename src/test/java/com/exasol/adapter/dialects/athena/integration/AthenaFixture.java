@@ -3,6 +3,7 @@ package com.exasol.adapter.dialects.athena.integration;
 import static java.util.stream.Collectors.toUnmodifiableMap;
 
 import java.util.Map;
+import java.util.UUID;
 
 import software.amazon.awssdk.auth.credentials.*;
 import software.amazon.awssdk.regions.Region;
@@ -10,6 +11,7 @@ import software.amazon.awssdk.services.athena.AthenaClient;
 import software.amazon.awssdk.services.cloudformation.CloudFormationClient;
 import software.amazon.awssdk.services.cloudformation.model.Output;
 import software.amazon.awssdk.services.cloudformation.model.Stack;
+import software.amazon.awssdk.services.athena.model.QueryExecutionState;
 
 /** Provides AWS credentials and the manually deployed Athena fixture's configuration. */
 final class AthenaFixture implements AutoCloseable {
@@ -74,11 +76,51 @@ final class AthenaFixture implements AutoCloseable {
         return output("Table");
     }
 
+    String createZonedTimestampIcebergTable() {
+        final String tableName = "zoned_timestamp_" + UUID.randomUUID().toString().replace("-", "");
+        final String tableLocation = output("OutputLocation") + "iceberg/" + tableName + "/";
+        executeQuery("CREATE TABLE " + database() + "." + tableName
+                + " WITH (table_type = 'ICEBERG', is_external = false, location = '" + tableLocation + "')"
+                + " AS SELECT TIMESTAMP '2024-03-25 11:12:13.456 UTC' AS zoned_timestamp");
+        return tableName;
+    }
+
+    void dropTable(final String tableName) {
+        executeQuery("DROP TABLE IF EXISTS " + database() + "." + tableName);
+    }
+
     boolean hasExecutedQueryContaining(final String fragment) {
         return this.athenaClient.listQueryExecutions(request -> request.workGroup(output("Workgroup")).maxResults(50))
                 .queryExecutionIds().stream()
                 .map(id -> this.athenaClient.getQueryExecution(request -> request.queryExecutionId(id)).queryExecution().query())
                 .anyMatch(query -> query.contains(fragment));
+    }
+
+    private void executeQuery(final String query) {
+        final String queryExecutionId = this.athenaClient.startQueryExecution(request -> request.queryString(query)
+                .workGroup(output("Workgroup")).queryExecutionContext(context -> context.database(database())))
+                .queryExecutionId();
+        waitForQuery(queryExecutionId, query);
+    }
+
+    private void waitForQuery(final String queryExecutionId, final String query) {
+        for (int attempt = 0; attempt < 300; attempt++) {
+            final var status = this.athenaClient.getQueryExecution(request -> request.queryExecutionId(queryExecutionId))
+                    .queryExecution().status();
+            if (status.state() == QueryExecutionState.SUCCEEDED) {
+                return;
+            }
+            if (status.state() == QueryExecutionState.FAILED || status.state() == QueryExecutionState.CANCELLED) {
+                throw new IllegalStateException("Athena query failed: " + query + ". " + status.stateChangeReason());
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (final InterruptedException exception) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException("Interrupted while waiting for Athena query: " + query, exception);
+            }
+        }
+        throw new IllegalStateException("Athena query timed out: " + query);
     }
 
     private String output(final String name) {
