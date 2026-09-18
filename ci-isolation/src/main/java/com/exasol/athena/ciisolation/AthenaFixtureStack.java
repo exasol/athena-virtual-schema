@@ -67,6 +67,7 @@ public class AthenaFixtureStack extends Stack {
                 .build()).addResourceDependency(database);
         final String resultLocation = fixtureBucket.s3UrlForObject("results/");
         new CfnWorkGroup(this, "WorkGroup", CfnWorkGroupProps.builder().name(WORKGROUP_NAME)
+                .recursiveDeleteOption(true)
                 .workGroupConfiguration(CfnWorkGroup.WorkGroupConfigurationProperty.builder().enforceWorkGroupConfiguration(true)
                         .resultConfiguration(CfnWorkGroup.ResultConfigurationProperty.builder().outputLocation(resultLocation).build())
                         .build())
