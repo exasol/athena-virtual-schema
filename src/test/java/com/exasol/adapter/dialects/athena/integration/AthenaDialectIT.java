@@ -1,11 +1,12 @@
 package com.exasol.adapter.dialects.athena.integration;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static com.exasol.matcher.ResultSetStructureMatcher.table;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import org.junit.jupiter.api.*;
 
@@ -42,5 +43,12 @@ class AthenaDialectIT {
                 + virtualSchema.getName() + ".\"" + fixture.table() + "\""),
                 table().row(3L, new BigDecimal("60.75"), "ALPHA").matches());
         assertThat(fixture.hasExecutedQueryContaining("UPPER"), is(true));
+    }
+
+    @Test
+    void loadsTimestamps() throws SQLException {
+        assertThat(fixture.statement().executeQuery("SELECT \"created_at\" FROM " + virtualSchema.getName()
+                + ".\"" + fixture.table() + "\" WHERE \"id\" = 1"),
+                table().withUtcCalendar().row(Timestamp.valueOf("2023-01-11 15:15:14")).matches());
     }
 }
