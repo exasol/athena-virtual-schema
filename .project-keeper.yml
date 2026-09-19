@@ -3,3 +3,23 @@ sources:
     path: pom.xml
     modules:
       - jar_artifact
+      - integration_tests
+      - udf_coverage
+build:
+  runnerOs: ubuntu-24.04
+  freeDiskSpace: true
+  exasolDbVersions:
+    - "2026.1.2" # Latest
+    - "2025.1.16" # Latest LTS
+    - "8.29.13" # Latest 8.x
+
+  workflows:
+    - name: ci-build.yml
+      stepCustomizations:
+        - action: INSERT_AFTER
+          job: matrix-build
+          stepId: enable-testcontainer-reuse
+          content:
+            name: Fix VM Crash in UDFs
+            id: fix-vm-crash
+            run: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0

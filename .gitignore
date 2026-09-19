@@ -35,3 +35,6 @@ venv/
 /.apt_generated_tests/
 
 org.eclipse.jdt.apt.core.prefs
+/.serena/
+/ci-isolation/cdk.out/
+/test_config.properties

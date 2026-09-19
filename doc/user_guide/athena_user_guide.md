@@ -10,7 +10,7 @@ For details on what is collected and how to disable telemetry, see the [document
 
 ## Uploading the JDBC Driver to Exasol BucketFS
 
-1. Download the [Athena JDBC driver](https://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html).
+1. Download the [Athena JDBC v3.x driver](https://docs.aws.amazon.com/athena/latest/ug/jdbc-v3-driver.html) as uber jar `athena-jdbc-<version>-with-dependencies.jar`.
 2. Upload the driver to BucketFS, see [BucketFS documentation](https://docs.exasol.com/db/latest/administration/on-premise/bucketfs/accessfiles.htm).
 
     Hint: Put the driver into folder `default/drivers/jdbc/` to register it for [ExaLoader](#registering-the-jdbc-driver-for-exaloader), too.
@@ -25,13 +25,13 @@ In order to enable the ExaLoader to fetch data from the external database you mu
 
    ```properties
    DRIVERNAME=ATHENA
-   JAR=AthenaJDBC42.jar
-   DRIVERMAIN=com.simba.athena.jdbc.Driver
-   PREFIX=jdbc:awsathena:
+   JAR=athena-jdbc-<version>-with-dependencies.jar
+   DRIVERMAIN=com.amazon.athena.jdbc.AthenaDriver
+   PREFIX=jdbc:athena:
    NOSECURITY=YES
    FETCHSIZE=100000
    INSERTSIZE=-1
-   
+
    ```
    Ensure that the file ends with a trailing newline.
 
@@ -50,30 +50,32 @@ The SQL statement below creates the adapter script, defines the Java class that 
 ```sql
 CREATE OR REPLACE JAVA ADAPTER SCRIPT ADAPTER.JDBC_ADAPTER AS
     %scriptclass com.exasol.adapter.RequestDispatcher;
-    %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-14.0.2-athena-3.0.0.jar;
-    %jar /buckets/<BFS service>/<bucket>/AthenaJDBC42.jar;
+    %jar /buckets/<BFS service>/<bucket>/virtual-schema-dist-14.0.5-athena-3.0.1.jar;
+    %jar /buckets/<BFS service>/<bucket>/athena-jdbc-<driver-version>-with-dependencies.jar;
 /
 ;
 ```
 
+Use the actual file names that you uploaded to BucketFS. The driver JAR must be the same v3 uber JAR configured for ExaLoader.
+
 ## Defining a Named Connection
 
-Define the connection to Athena as shown below. We also recommend using TLS to secure the connection.
+Define the connection to Athena as shown below. The v3 driver uses the `jdbc:athena://` URL prefix. It accepts the AWS access key ID and secret access key from the connection's `USER` and `IDENTIFIED BY` clauses.
 
 ```sql
 CREATE OR REPLACE CONNECTION ATHENA_CONNECTION
-TO 'jdbc:awsathena://AwsRegion=<region>;S3OutputLocation=s3://<path to query results>'
+TO 'jdbc:athena://Region=<region>;Workgroup=primary;Catalog=AwsDataCatalog;Database=<database name>;OutputLocation=s3://<path to query results>'
 USER '<access key ID>'
 IDENTIFIED BY '<access key>';
 ```
 
-Please refer to the [documentation on configuring JDBC connections to Athena](https://docs.aws.amazon.com/athena/latest/ug/connect-with-jdbc.html) for details.
+`Workgroup` defaults to `primary` and `Catalog` defaults to `AwsDataCatalog`, so they can be omitted when those defaults are suitable. `OutputLocation` can also be omitted when the selected workgroup specifies an output location. For other authentication methods and connection parameters, see the [Athena JDBC 3.x connection-parameter documentation](https://docs.aws.amazon.com/athena/latest/ug/jdbc-v3-driver-connection-parameters.html).
 
 For the connection troubleshooting refer to the [AWS documentation](https://aws.amazon.com/premiumsupport/knowledge-center/). Search for Amazon Athena on the page.
 
 ## Creating a Virtual Schema
 
-Below you see how an Athena Virtual Schema is created. Please note that you have to provide the name of the database in the property `SHEMA_NAME` since Athena simulates catalogs.
+Below you see how an Athena Virtual Schema is created. Provide the name of the Athena database in the `SCHEMA_NAME` property. Athena databases are exposed as JDBC schemas.
 
 ```sql
 CREATE VIRTUAL SCHEMA <virtual schema name>
@@ -105,18 +107,9 @@ CREATE VIRTUAL SCHEMA <virtual schema name>
 | TINYINT            |  ✓        | DECIMAL                   |
 | VARCHAR            |  ✓        | VARCHAR                   |
 
-* Please be aware that the recommended Simba JDBC driver returns 255 as a default length of the String data type. It means that if you have a longer String value, the Exasol database would throw an Exception. To avoid this, you can specify a String length in the connection string:
+* Athena JDBC v3 no longer supports the v2 `StringColumnLength` connection parameter. The driver reports unbounded Athena `string` columns with a precision of `2147483647`. If bounded string metadata is required, cast the column to `varchar(n)` in Athena or expose that cast through an Athena view. Choose `n` large enough to avoid truncating values.
 
-```
-CREATE OR REPLACE CONNECTION ATHENA_CONNECTION
-TO 'jdbc:awsathena://AwsRegion=<region>;S3OutputLocation=s3://<path to query results>;StringColumnLength=2000000'
-USER '<access key ID>'
-IDENTIFIED BY '<access key>';
-```
-
-In this example we used the maximum length of the Exasol Varchar datatype.
-
-## Troubleshooting 
+## Troubleshooting
 
 ### SELECT Query Hangs and Returns Timeout
 
@@ -129,9 +122,9 @@ If you created a Virtual Schema successfully, but a SELECT query runs forever wi
    nc -v athena.eu-west-1.amazonaws.com 443
    nc -v athena.eu-west-1.amazonaws.com 444
    ```
-   
+
    `athena.eu-west-1.amazonaws.com` is a public endpoint. If you use a private VPC endpoint with Athena, please specify it instead of public one. If a port is not opened, you will see output like this:
-   
+
    ```shell
    [root@n0011 ~]# nc -v athena.eu-west-1.amazonaws.com 444
    Ncat: Version 7.50 ( https://nmap.org/ncat )
@@ -141,23 +134,18 @@ If you created a Virtual Schema successfully, but a SELECT query runs forever wi
    Ncat: Trying next address...
    ...
    ```
-   
+
    In this case, you need to enable outbound traffic on the port (usually, it is blocked by your firewall).
 
-* Enable Athena JDBC driver logs and check them: maybe there is a missing permission. To enable the logs, you need to modify a connection string. Append this line to the connection string, recreate a connection and run a query again:
+* Enable Athena JDBC driver logs and check them: maybe there is a missing permission. To enable the logs, modify the connection string, recreate the connection, and run the query again:
 
    ```
-   LogLevel=5;LogPath=/tmp/athena/
+   LogLevel=DEBUG;LogPath=/tmp/athena/
    ```
-   
+
    You can find the logs in the `/tmp/athena/` directory on the Exasol Node.
 
 * See also: https://aws.amazon.com/premiumsupport/knowledge-center/athena-connection-timeout-jdbc-odbc-driver/
-
-### You get an error: Value null at 'workGroup' failed to satisfy constraint: Member must not be null
-
-**Solution**: use the JDBC driver 2.0.23 or later. Some old driver versions had a bug leading to this error.
-See the driver's [changelog](https://s3.cn-north-1.amazonaws.com.cn/athena-downloads-cn/drivers/JDBC/SimbaAthenaJDBC-2.0.23.1000/docs/release-notes.txt) file for additional information.
 
 ### If Athena database/table/column name has special characters except underscore, Virtual Schema throws an error
 

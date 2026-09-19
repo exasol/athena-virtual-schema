@@ -34,7 +34,7 @@ jobs:
       cancel-in-progress: false
     }
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         id: checkout
         with: {
           fetch-depth: 0,
@@ -42,12 +42,12 @@ jobs:
         }
       - name: Set up JDKs
         id: setup-jdks
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: |-
             11
-            17
+            21
           cache: maven
       - name: Print issues
         id: debug-print-issues

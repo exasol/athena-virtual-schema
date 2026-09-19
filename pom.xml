@@ -3,13 +3,26 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.exasol</groupId>
     <artifactId>athena-virtual-schema</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <name>Virtual Schema for Athena</name>
     <description>Virtual Schema for connecting Athena as a data source to Exasol</description>
     <url>https://github.com/exasol/athena-virtual-schema/</url>
     <properties>
-        <vscjdbc.version>14.0.2</vscjdbc.version>
+        <vscjdbc.version>14.0.5</vscjdbc.version>
+        <!-- Integration tests disabled, see doc/developer_guide/developer_guide.md for details. -->
+        <skipIntegrationTests>true</skipIntegrationTests>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>2.54.20</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -60,6 +73,53 @@
             <version>3.19.4</version>
             <scope>test</scope>
         </dependency>
+        <!-- Integration test dependencies -->
+        <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>exasol-testcontainers</artifactId>
+            <version>8.0.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>test-db-builder-java</artifactId>
+            <version>4.0.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>hamcrest-resultset-matcher</artifactId>
+            <version>1.7.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>udf-debugging-java</artifactId>
+            <version>0.6.20</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>cloudformation</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>athena</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>signin</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- Enable log output for integration tests -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-jdk14</artifactId>
+            <version>1.7.36</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -71,9 +131,16 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <skip>${skipIntegrationTests}</skip>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.6.2</version>
+                <version>5.7.6</version>
                 <executions>
                     <execution>
                         <goals>
@@ -87,7 +154,7 @@
     <parent>
         <artifactId>athena-virtual-schema-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>3.0.0</version>
+        <version>3.0.1</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
 </project>

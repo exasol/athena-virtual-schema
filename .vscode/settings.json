@@ -10,7 +10,9 @@
     "java.sources.organizeImports.staticStarThreshold": 3,
     "java.test.config": {
         "vmArgs": [
-            "-Djava.util.logging.config.file=src/test/resources/logging.properties"
+            "-Djava.util.logging.config.file=src/test/resources/logging.properties",
+            "-Dtest.coverage=false",
+            "-Dcom.exasol.dockerdb.image=2026.1.2"
         ]
     },
     "sonarlint.connectedMode.project": {
