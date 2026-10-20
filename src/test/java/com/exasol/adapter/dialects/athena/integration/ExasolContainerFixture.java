@@ -1,7 +1,5 @@
 package com.exasol.adapter.dialects.athena.integration;
 
-import static com.exasol.dbbuilder.dialects.exasol.AdapterScript.Language.JAVA;
-
 import java.nio.file.Path;
 import java.sql.*;
 import java.util.Map;
@@ -10,6 +8,7 @@ import com.exasol.bucketfs.Bucket;
 import com.exasol.containers.ExasolContainer;
 import com.exasol.containers.ExasolService;
 import com.exasol.dbbuilder.dialects.exasol.*;
+import com.exasol.dbbuilder.dialects.exasol.AdapterScript.Language;
 import com.exasol.udfdebugging.UdfTestSetup;
 
 /** Owns the ephemeral Exasol container and its BucketFS driver/adapter deployment. */
@@ -25,6 +24,7 @@ final class ExasolContainerFixture implements AutoCloseable {
     private final AdapterScript adapterScript;
     private int virtualSchemaCounter;
 
+    @SuppressWarnings("resource") // ExasolContainer is closed in close()
     ExasolContainerFixture(final AthenaJdbcDriverManager jdbcDriver) {
         try {
             this.container = new ExasolContainer<>()
@@ -39,7 +39,7 @@ final class ExasolContainerFixture implements AutoCloseable {
             this.objectFactory = new ExasolObjectFactory(this.container.createConnection(""),
                     ExasolObjectConfiguration.builder().withJvmOptions(this.udfTestSetup.getJvmOptions()).build());
             final ExasolSchema schema = this.objectFactory.createSchema(SCHEMA_NAME);
-            this.adapterScript = schema.createAdapterScript("ATHENA_ADAPTER", JAVA,
+            this.adapterScript = schema.createAdapterScript("ATHENA_ADAPTER", Language.JAVA,
                     "%scriptclass com.exasol.adapter.RequestDispatcher;\n"
                             + "%jar /buckets/bfsdefault/default/" + ADAPTER_JAR + ";\n"
                             + "%jar /buckets/bfsdefault/default/drivers/jdbc/" + jdbcDriver.fileName() + ";\n");
