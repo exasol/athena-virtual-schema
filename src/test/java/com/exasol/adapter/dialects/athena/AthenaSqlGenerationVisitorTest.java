@@ -20,9 +20,23 @@ import com.exasol.adapter.sql.SqlSelectList;
 class AthenaSqlGenerationVisitorTest {
     @Test
     void castsDirectProjectionOfTimestamp() throws Exception {
-        final SqlColumn column = column("timestamp(6) with time zone");
+        final SqlColumn column = timestampColumn();
         column.setParent(SqlSelectList.createRegularSelectList(List.of(column)));
+
         assertThat(visitor().visit(column), equalTo("CAST(\"zoned_timestamp\" AS timestamp)"));
+    }
+
+    @Test
+    void doesNotCastTimestampOutsideSelectList() throws Exception {
+        assertThat(visitor().visit(timestampColumn()), equalTo("\"zoned_timestamp\""));
+    }
+
+    @Test
+    void doesNotCastNonTimestampProjection() throws Exception {
+        final SqlColumn column = column("boolean", Types.BOOLEAN, DataType.createBool());
+        column.setParent(SqlSelectList.createRegularSelectList(List.of(column)));
+
+        assertThat(visitor().visit(column), equalTo("\"zoned_timestamp\""));
     }
 
     private static AthenaSqlGenerationVisitor visitor() {
@@ -30,10 +44,14 @@ class AthenaSqlGenerationVisitorTest {
                 new SqlGenerationContext(null, null, false));
     }
 
-    private static SqlColumn column(final String typeName) {
+    private static SqlColumn timestampColumn() {
+        return column("timestamp(6) with time zone", Types.TIMESTAMP, DataType.createTimestamp(false, 3));
+    }
+
+    private static SqlColumn column(final String typeName, final int jdbcType, final DataType dataType) {
         final String adapterNotes = ColumnAdapterNotesJsonConverter.getInstance().convertToJson(ColumnAdapterNotes.builder()
-                .jdbcDataType(Types.TIMESTAMP).typeName(typeName).build());
+                .jdbcDataType(jdbcType).typeName(typeName).build());
         return new SqlColumn(0, ColumnMetadata.builder().name("zoned_timestamp").adapterNotes(adapterNotes)
-                .type(DataType.createTimestamp(false, 3)).build());
+                .type(dataType).build());
     }
 }

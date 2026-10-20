@@ -30,6 +30,7 @@ import com.exasol.adapter.AdapterProperties;
 import com.exasol.adapter.dialects.JDBCAdapterContext;
 import com.exasol.adapter.dialects.SqlDialect.NullSorting;
 import com.exasol.adapter.dialects.SqlDialect.StructureElementSupport;
+import com.exasol.adapter.dialects.rewriting.ImportIntoTemporaryTableQueryRewriter;
 import com.exasol.adapter.jdbc.ConnectionFactory;
 import com.exasol.adapter.jdbc.RemoteMetadataReaderException;
 import com.exasol.adapter.properties.DataTypeDetection;
@@ -160,5 +161,16 @@ class AthenaSqlDialectTest {
                 containsInAnyOrder(CONNECTION_NAME_PROPERTY, CATALOG_NAME_PROPERTY, SCHEMA_NAME_PROPERTY,
                         TABLE_FILTER_PROPERTY, EXCLUDED_CAPABILITIES_PROPERTY, DEBUG_ADDRESS_PROPERTY,
                         LOG_LEVEL_PROPERTY, DataTypeDetection.STRATEGY_PROPERTY, TableCountLimit.MAXTABLES_PROPERTY, "TELEMETRY"));
+    }
+
+    @Test
+    void testGetSqlGenerator() {
+        assertThat(this.dialect.getSqlGenerator(null), instanceOf(AthenaSqlGenerationVisitor.class));
+    }
+
+    @Test
+    void testCreateQueryRewriter() {
+        when(this.exaMetadataMock.getDatabaseVersion()).thenReturn("2026.1.2");
+        assertThat(this.dialect.createQueryRewriter(), instanceOf(ImportIntoTemporaryTableQueryRewriter.class));
     }
 }
