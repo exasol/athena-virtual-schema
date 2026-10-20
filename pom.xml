@@ -8,7 +8,7 @@
     <description>Virtual Schema for connecting Athena as a data source to Exasol</description>
     <url>https://github.com/exasol/athena-virtual-schema/</url>
     <properties>
-        <vscjdbc.version>14.0.5</vscjdbc.version>
+        <vscjdbc.version>14.1.0</vscjdbc.version>
         <!-- Integration tests disabled, see doc/developer_guide/developer_guide.md for details. -->
         <skipIntegrationTests>true</skipIntegrationTests>
     </properties>
@@ -17,7 +17,7 @@
             <dependency>
                 <groupId>software.amazon.awssdk</groupId>
                 <artifactId>bom</artifactId>
-                <version>2.54.20</version>
+                <version>2.57.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -63,7 +63,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
-            <version>5.23.0</version>
+            <version>5.24.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -89,13 +89,13 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>hamcrest-resultset-matcher</artifactId>
-            <version>1.7.3</version>
+            <version>1.7.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>udf-debugging-java</artifactId>
-            <version>0.6.20</version>
+            <version>0.6.22</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -117,7 +117,7 @@
             <!-- Enable log output for integration tests -->
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
-            <version>1.7.36</version>
+            <version>2.0.20</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -140,7 +140,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>5.7.6</version>
+                <version>5.7.7</version>
                 <executions>
                     <execution>
                         <goals>

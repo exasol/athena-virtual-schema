@@ -8,7 +8,7 @@
     <name>Athena Virtual Schema CI Isolation</name>
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
-        <aws.cdk.version>2.269.0</aws.cdk.version>
+        <aws.cdk.version>2.273.0</aws.cdk.version>
     </properties>
     <dependencies>
         <dependency>

@@ -12,10 +12,11 @@ import com.exasol.drivers.JdbcDriver;
 /** Pinned Athena JDBC driver artifact used by the integration tests. */
 final class AthenaJdbcDriverManager {
     // https://docs.aws.amazon.com/athena/latest/ug/jdbc-v3-driver.html
-    private static final String FILE_NAME = "athena-jdbc-3.8.1-with-dependencies.jar";
+    private static final String DRIVER_VERSION = "3.8.2";
+    private static final String FILE_NAME = "athena-jdbc-" + DRIVER_VERSION + "-with-dependencies.jar";
     private static final URI DOWNLOAD_URI = URI.create(
-            "https://downloads.athena.us-east-1.amazonaws.com/drivers/JDBC/3.8.1/" + FILE_NAME);
-    private static final String SHA_256 = "271d6811887c8c7cb6096b44988af1d950bb8f9943ba4d2bfd4e21a4f2172932";
+            "https://aws-analytics-downloads-us-east-1.s3.us-east-1.amazonaws.com/athena/JDBC/" + DRIVER_VERSION + "/" + FILE_NAME);
+    private static final String SHA_256 = "ab88dda6fdac013c26e9230786616db104aec4a2c192316228188e4ccf06f188";
     private static final Path FILE = Path.of("target", FILE_NAME);
     private final Path file;
 
@@ -30,7 +31,7 @@ final class AthenaJdbcDriverManager {
                 doDownload();
             }
             if (!validateChecksum()) {
-                throw new IllegalStateException("Downloaded Athena JDBC driver checksum does not match the pinned SHA-256.");
+                throw new IllegalStateException("Downloaded Athena JDBC driver '" + FILE + "' checksum does not match the pinned SHA-256.");
             }
             return new AthenaJdbcDriverManager(FILE);
         } catch (final InterruptedException exception) {
