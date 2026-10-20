@@ -22,7 +22,6 @@ class AthenaSqlGenerationVisitorTest {
     void castsDirectProjectionOfTimestamp() throws Exception {
         final SqlColumn column = timestampColumn();
         column.setParent(SqlSelectList.createRegularSelectList(List.of(column)));
-
         assertThat(visitor().visit(column), equalTo("CAST(\"zoned_timestamp\" AS timestamp)"));
     }
 
@@ -35,7 +34,6 @@ class AthenaSqlGenerationVisitorTest {
     void doesNotCastNonTimestampProjection() throws Exception {
         final SqlColumn column = column("boolean", Types.BOOLEAN, DataType.createBool());
         column.setParent(SqlSelectList.createRegularSelectList(List.of(column)));
-
         assertThat(visitor().visit(column), equalTo("\"zoned_timestamp\""));
     }
 

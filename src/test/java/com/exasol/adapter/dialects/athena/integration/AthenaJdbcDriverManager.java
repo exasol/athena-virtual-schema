@@ -31,7 +31,7 @@ final class AthenaJdbcDriverManager {
                 doDownload();
             }
             if (!validateChecksum()) {
-                throw new IllegalStateException("Downloaded Athena JDBC driver " + FILE + " checksum does not match the pinned SHA-256.");
+                throw new IllegalStateException("Downloaded Athena JDBC driver '" + FILE + "' checksum does not match the pinned SHA-256.");
             }
             return new AthenaJdbcDriverManager(FILE);
         } catch (final InterruptedException exception) {
