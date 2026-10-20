@@ -21,16 +21,15 @@ final class AthenaColumnMetadataReader extends BaseColumnMetadataReader {
     }
 
     @Override
-    public DataType mapJdbcType(final JDBCTypeDescription jdbcTypeDescription) {
-        if (jdbcTypeDescription.getJdbcType() == Types.TIMESTAMP || isTimestampWithTimeZone(jdbcTypeDescription)) {
+    public DataType mapJdbcType(final JDBCTypeDescription description) {
+        if (description.getJdbcType() == Types.TIMESTAMP || isTimestampWithTimeZone(description)) {
             return DataType.createTimestamp(false, ATHENA_TIMESTAMP_PRECISION);
         }
-        return super.mapJdbcType(jdbcTypeDescription);
+        return super.mapJdbcType(description);
     }
 
     static boolean isTimestampWithTimeZone(final JDBCTypeDescription description) {
-        return description.getJdbcType() == Types.TIMESTAMP_WITH_TIMEZONE
-                || isTimestampWithTimeZone(description.getTypeName());
+        return description.getJdbcType() == Types.TIMESTAMP_WITH_TIMEZONE || isTimestampWithTimeZone(description.getTypeName());
     }
 
     static boolean isTimestampWithTimeZone(final String typeName) {

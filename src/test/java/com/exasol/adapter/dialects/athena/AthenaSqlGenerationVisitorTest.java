@@ -22,7 +22,6 @@ class AthenaSqlGenerationVisitorTest {
     void castsDirectProjectionOfTimestamp() throws Exception {
         final SqlColumn column = column("timestamp(6) with time zone");
         column.setParent(SqlSelectList.createRegularSelectList(List.of(column)));
-
         assertThat(visitor().visit(column), equalTo("CAST(\"zoned_timestamp\" AS timestamp)"));
     }
 

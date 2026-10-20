@@ -48,7 +48,6 @@ class AthenaMetadataReaderTest {
     @Test
     void mapsTimestampToMillisecondPrecision() {
         final AthenaColumnMetadataReader columnReader = (AthenaColumnMetadataReader) this.reader.getColumnMetadataReader();
-
         assertThat(columnReader.mapJdbcType(new JDBCTypeDescription(Types.TIMESTAMP, 0, 0, 0, "timestamp")),
                 equalTo(DataType.createTimestamp(false, 3)));
     }

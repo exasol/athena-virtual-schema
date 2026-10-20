@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
 class AthenaColumnMetadataReaderTest {
     @ParameterizedTest
     @ValueSource(strings = { "timestamp with time zone", "timestamp(6) with timezone", "TIMESTAMP WITH TIME ZONE" })
