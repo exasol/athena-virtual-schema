@@ -23,9 +23,7 @@ The user guide now recommends the Athena JDBC v3 driver and documents its v3 con
 * Added `com.exasol:test-db-builder-java:4.0.3`
 * Added `com.exasol:udf-debugging-java:0.6.22`
 * Updated `com.exasol:virtual-schema-common-jdbc:14.0.2` to `14.1.0`
-* Updated `nl.jqno.equalsverifier:equalsverifier:3.19.4` to `4.5.2`
 * Added `org.jacoco:org.jacoco.agent:0.8.15`
-* Updated `org.junit.jupiter:junit-jupiter:5.14.4` to `6.1.3`
 * Updated `org.mockito:mockito-junit-jupiter:5.23.0` to `5.24.0`
 * Added `org.slf4j:slf4j-jdk14:2.0.20`
 * Added `software.amazon.awssdk:athena:2.57.0`
