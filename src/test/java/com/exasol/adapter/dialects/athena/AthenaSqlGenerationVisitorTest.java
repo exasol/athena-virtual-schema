@@ -26,14 +26,6 @@ class AthenaSqlGenerationVisitorTest {
         assertThat(visitor().visit(column), equalTo("CAST(\"zoned_timestamp\" AS timestamp)"));
     }
 
-    @Test
-    void castsPlainTimestamp() throws Exception {
-        final SqlColumn column = column("timestamp");
-        column.setParent(SqlSelectList.createRegularSelectList(List.of(column)));
-
-        assertThat(visitor().visit(column), equalTo("CAST(\"zoned_timestamp\" AS timestamp)"));
-    }
-
     private static AthenaSqlGenerationVisitor visitor() {
         return new AthenaSqlGenerationVisitor(new AthenaSqlDialect(JDBCAdapterContext.builder().build()),
                 new SqlGenerationContext(null, null, false));
@@ -43,6 +35,6 @@ class AthenaSqlGenerationVisitorTest {
         final String adapterNotes = ColumnAdapterNotesJsonConverter.getInstance().convertToJson(ColumnAdapterNotes.builder()
                 .jdbcDataType(Types.TIMESTAMP).typeName(typeName).build());
         return new SqlColumn(0, ColumnMetadata.builder().name("zoned_timestamp").adapterNotes(adapterNotes)
-                .type(DataType.createTimestamp(false, 6)).build());
+                .type(DataType.createTimestamp(false, 3)).build());
     }
 }

@@ -36,7 +36,7 @@ public class AthenaMetadataReader extends AbstractRemoteMetadataReader {
 
     @Override
     protected ColumnMetadataReader createColumnMetadataReader() {
-        return new BaseColumnMetadataReader(this.connection, this.properties, this.exaMetadata, this.identifierConverter);
+        return new AthenaColumnMetadataReader(this.connection, this.properties, this.exaMetadata, this.identifierConverter);
     }
 
     @Override

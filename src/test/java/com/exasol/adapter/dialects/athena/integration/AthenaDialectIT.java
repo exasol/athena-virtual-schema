@@ -56,7 +56,7 @@ class AthenaDialectIT {
     void loadsTimestamps() throws SQLException {
         assertThat(fixture.statement().executeQuery("SELECT \"created_at\" FROM " + virtualSchema.getName()
                 + ".\"" + fixture.table() + "\" WHERE \"id\" = 1"),
-                table().withUtcCalendar().row(Timestamp.valueOf("2023-01-11 15:15:14")).matches());
+                table().withUtcCalendar().row(Timestamp.valueOf("2023-01-11 15:15:14.123")).matches());
     }
 
     @Test
@@ -66,7 +66,7 @@ class AthenaDialectIT {
             final VirtualSchema icebergVirtualSchema = fixture.createVirtualSchema();
             assertThat(fixture.statement().executeQuery("SELECT \"zoned_timestamp\" FROM " + icebergVirtualSchema.getName()
                     + ".\"" + tableName + "\""),
-                    table().withUtcCalendar().row(Timestamp.from(Instant.parse("2024-03-25T11:12:13Z"))).matches());
+                    table().withUtcCalendar().row(Timestamp.from(Instant.parse("2024-03-25T11:12:13.456Z"))).matches());
         } finally {
             fixture.dropTable(tableName);
         }
