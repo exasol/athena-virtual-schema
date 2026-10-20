@@ -8,6 +8,8 @@ The user guide now recommends the Athena JDBC v3 driver and documents its v3 con
 
 ## Bufixes
 
+* #29: Fixed reads of Athena Iceberg `timestamp with time zone` columns with AWS JDBC driver v3.
+
 ## Dependency Updates
 
 ### Compile Dependency Updates

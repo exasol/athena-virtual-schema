@@ -126,6 +126,11 @@ public class AthenaSqlDialect extends AbstractSqlDialect {
     }
 
     @Override
+    public SqlGenerator getSqlGenerator(final SqlGenerationContext context) {
+        return new AthenaSqlGenerationVisitor(this, context);
+    }
+
+    @Override
     protected RemoteMetadataReader createRemoteMetadataReader() {
         try {
             return new AthenaMetadataReader(this.connectionFactory.getConnection(), this.properties, this.exaMetadata);
