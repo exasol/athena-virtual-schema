@@ -25,7 +25,7 @@
 | [AWS Java SDK :: Services :: AWS CloudFormation][22] | [Apache License, Version 2.0][23] |
 | [AWS Java SDK :: Services :: Amazon Athena][22]      | [Apache License, Version 2.0][23] |
 | [AWS Java SDK :: Services :: Signin][22]             | [Apache License, Version 2.0][23] |
-| [SLF4J JDK14 Binding][24]                            | [MIT License][25]                 |
+| [SLF4J JDK14 Provider][24]                           | [MIT][25]                         |
 | [JaCoCo :: Agent][26]                                | [EPL-2.0][27]                     |
 
 ## Plugin Dependencies
@@ -82,7 +82,7 @@
 [22]: https://aws.amazon.com/sdkforjava
 [23]: https://aws.amazon.com/apache2.0
 [24]: http://www.slf4j.org
-[25]: http://www.opensource.org/licenses/mit-license.php
+[25]: https://opensource.org/license/mit
 [26]: https://www.eclemma.org/jacoco/index.html
 [27]: https://www.eclipse.org/legal/epl-2.0/
 [28]: https://docs.sonarsource.com/sonarqube-server/latest/extension-guide/developing-a-plugin/plugin-basics/sonar-scanner-maven/sonar-maven-plugin/

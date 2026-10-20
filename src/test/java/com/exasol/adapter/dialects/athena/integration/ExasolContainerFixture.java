@@ -14,7 +14,7 @@ import com.exasol.udfdebugging.UdfTestSetup;
 
 /** Owns the ephemeral Exasol container and its BucketFS driver/adapter deployment. */
 final class ExasolContainerFixture implements AutoCloseable {
-    private static final String ADAPTER_JAR = "virtual-schema-dist-14.0.5-athena-3.0.1.jar";
+    private static final String ADAPTER_JAR = "virtual-schema-dist-14.1.0-athena-3.0.1.jar";
     private static final Path ADAPTER_JAR_PATH = Path.of("target", ADAPTER_JAR);
     private static final String SCHEMA_NAME = "ATHENA_IT";
     private final ExasolContainer<? extends ExasolContainer<?>> container;
