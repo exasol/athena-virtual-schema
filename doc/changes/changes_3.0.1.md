@@ -1,6 +1,6 @@
-# Virtual Schema for Athena 3.0.1, released 2026-09-??
+# Virtual Schema for Athena 3.0.1, released 2026-10-20
 
-Code name: Athena JDBC version 3
+Code name: Support `timestamp with time zone` Columns
 
 ## Summary
 
